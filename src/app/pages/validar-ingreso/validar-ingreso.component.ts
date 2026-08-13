@@ -12,8 +12,7 @@ import { ResultadoValidacion } from '../../models/registro-ingreso.model';
     <div class="card card-central">
       <h2>Validar cédula</h2>
       <p class="ayuda">
-        Digite o escanee la cédula. Si la persona no está adentro, se valida su ingreso.
-        Si ya está adentro, este mismo escaneo registra su salida.
+        Digite o escanee la cédula.
       </p>
 
       <input

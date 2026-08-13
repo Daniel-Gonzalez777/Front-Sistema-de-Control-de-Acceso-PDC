@@ -33,7 +33,15 @@ import { ResultadoCarga } from '../../models/resultado-carga.model';
         </div>
         <div>
           <label>Archivo Excel (.xlsx)</label>
-          <input type="file" accept=".xlsx" (change)="onArchivoSeleccionado($event)" required>
+          <input
+              type="file"
+              id="archivoExcel"
+              accept=".xlsx"
+              (change)="onArchivoSeleccionado($event)"
+              hidden>
+          <label for="archivoExcel" class="btn-archivo">
+            📎 {{ archivoSeleccionado ? archivoSeleccionado.name : 'Elegir archivo' }}
+          </label>
         </div>
         <div>
           <button type="submit" [disabled]="!concesionarioIdCarga || !archivoSeleccionado || subiendo">
@@ -54,9 +62,9 @@ import { ResultadoCarga } from '../../models/resultado-carga.model';
         <table *ngIf="resultadoCarga.errores.length">
           <thead><tr><th>Fila</th><th>Cédula</th><th>Problema</th></tr></thead>
           <tbody>
-            <tr *ngFor="let e of resultadoCarga.errores">
-              <td>{{ e.fila }}</td><td>{{ e.cedula || '(vacía)' }}</td><td>{{ e.mensaje }}</td>
-            </tr>
+          <tr *ngFor="let e of resultadoCarga.errores">
+            <td>{{ e.fila }}</td><td>{{ e.cedula || '(vacía)' }}</td><td>{{ e.mensaje }}</td>
+          </tr>
           </tbody>
         </table>
       </div>
@@ -113,25 +121,25 @@ import { ResultadoCarga } from '../../models/resultado-carga.model';
       <h2>Afiliaciones cargadas</h2>
       <table>
         <thead>
-          <tr>
-            <th>Empleado</th><th>Año</th><th>Mes</th>
-            <th>Salud</th><th>EPS</th><th>Pensión</th><th>AFP</th><th>ARL</th><th>Nombre ARL</th><th>Cargado</th>
-          </tr>
+        <tr>
+          <th>Empleado</th><th>Año</th><th>Mes</th>
+          <th>Salud</th><th>EPS</th><th>Pensión</th><th>AFP</th><th>ARL</th><th>Nombre ARL</th><th>Cargado</th>
+        </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let a of afiliaciones">
-            <td>{{ nombreEmpleado(a) }}</td>
-            <td>{{ a.anio }}</td>
-            <td>{{ a.mes }}</td>
-            <td><span class="badge" [class.ok]="a.afiliadoSalud" [class.no]="!a.afiliadoSalud">{{ a.afiliadoSalud ? 'Sí' : 'No' }}</span></td>
-            <td>{{ a.eps || '—' }}</td>
-            <td><span class="badge" [class.ok]="a.afiliadoPension" [class.no]="!a.afiliadoPension">{{ a.afiliadoPension ? 'Sí' : 'No' }}</span></td>
-            <td>{{ a.afp || '—' }}</td>
-            <td><span class="badge" [class.ok]="a.afiliadoARL" [class.no]="!a.afiliadoARL">{{ a.afiliadoARL ? 'Sí' : 'No' }}</span></td>
-            <td>{{ a.arl || '—' }}</td>
-            <td>{{ a.fechaCarga | date:'short' }}</td>
-          </tr>
-          <tr *ngIf="!afiliaciones.length"><td colspan="10">No hay afiliaciones cargadas todavía.</td></tr>
+        <tr *ngFor="let a of afiliaciones">
+          <td>{{ nombreEmpleado(a) }}</td>
+          <td>{{ a.anio }}</td>
+          <td>{{ a.mes }}</td>
+          <td><span class="badge" [class.ok]="a.afiliadoSalud" [class.no]="!a.afiliadoSalud">{{ a.afiliadoSalud ? 'Sí' : 'No' }}</span></td>
+          <td>{{ a.eps || '—' }}</td>
+          <td><span class="badge" [class.ok]="a.afiliadoPension" [class.no]="!a.afiliadoPension">{{ a.afiliadoPension ? 'Sí' : 'No' }}</span></td>
+          <td>{{ a.afp || '—' }}</td>
+          <td><span class="badge" [class.ok]="a.afiliadoARL" [class.no]="!a.afiliadoARL">{{ a.afiliadoARL ? 'Sí' : 'No' }}</span></td>
+          <td>{{ a.arl || '—' }}</td>
+          <td>{{ a.fechaCarga | date:'short' }}</td>
+        </tr>
+        <tr *ngIf="!afiliaciones.length"><td colspan="10">No hay afiliaciones cargadas todavía.</td></tr>
         </tbody>
       </table>
     </div>
@@ -139,6 +147,26 @@ import { ResultadoCarga } from '../../models/resultado-carga.model';
   styles: [`
     .resumen-carga { margin-top: 16px; }
     .resumen-badges { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+
+    .btn-archivo {
+      display: block;
+      background: white;
+      color: #D3131C;
+      border: 1.5px dashed #D3131C;
+      padding: 8px 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+    .btn-archivo:hover {
+      background: #D3131C;
+      color: white;
+    }
   `]
 })
 export class AfiliacionesComponent implements OnInit {
@@ -169,9 +197,9 @@ export class AfiliacionesComponent implements OnInit {
   error = '';
 
   constructor(
-    private afiliacionService: AfiliacionService,
-    private empleadoService: EmpleadoService,
-    private concesionarioService: ConcesionarioService
+      private afiliacionService: AfiliacionService,
+      private empleadoService: EmpleadoService,
+      private concesionarioService: ConcesionarioService
   ) {}
 
   ngOnInit(): void {

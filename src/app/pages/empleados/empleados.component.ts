@@ -46,21 +46,33 @@ import { Concesionario } from '../../models/concesionario.model';
     </div>
 
     <div class="card">
-      <h2>Empleados registrados</h2>
-      <table>
+      <h2>Empleados por concesionario</h2>
+
+      <div style="max-width:320px; margin-bottom:16px;">
+        <label>Ver empleados de</label>
+        <select [(ngModel)]="filtroConcesionarioId" (ngModelChange)="onFiltroChange()" name="filtroConcesionarioId">
+          <option [ngValue]="null">Seleccione un concesionario...</option>
+          <option *ngFor="let c of concesionarios" [ngValue]="c.id">{{ c.nombre }}</option>
+        </select>
+      </div>
+
+      <div *ngIf="!filtroConcesionarioId" class="ayuda">
+        Selecciona un concesionario arriba para ver su lista de empleados.
+      </div>
+
+      <table *ngIf="filtroConcesionarioId">
         <thead>
-          <tr><th>Cédula</th><th>Nombre</th><th>Cargo</th><th>Área</th><th>Concesionario</th><th>Acciones</th></tr>
+        <tr><th>Cédula</th><th>Nombre</th><th>Cargo</th><th>Área</th><th>Acciones</th></tr>
         </thead>
         <tbody>
-          <tr *ngFor="let e of empleados">
-            <td>{{ e.cedula }}</td>
-            <td>{{ e.nombre }}</td>
-            <td>{{ e.cargo || '—' }}</td>
-            <td>{{ e.area || '—' }}</td>
-            <td>{{ nombreConcesionario(e) }}</td>
-            <td class="acciones"><button class="danger" (click)="eliminar(e)">Eliminar</button></td>
-          </tr>
-          <tr *ngIf="!empleados.length"><td colspan="6">No hay empleados registrados todavía.</td></tr>
+        <tr *ngFor="let e of empleados">
+          <td>{{ e.cedula }}</td>
+          <td>{{ e.nombre }}</td>
+          <td>{{ e.cargo || '—' }}</td>
+          <td>{{ e.area || '—' }}</td>
+          <td class="acciones"><button class="danger" (click)="eliminar(e)">Eliminar</button></td>
+        </tr>
+        <tr *ngIf="!empleados.length"><td colspan="5">Este concesionario no tiene empleados registrados todavía.</td></tr>
         </tbody>
       </table>
     </div>
@@ -70,28 +82,30 @@ export class EmpleadosComponent implements OnInit {
   empleados: Empleado[] = [];
   concesionarios: Concesionario[] = [];
   concesionarioId: number | null = null;
+  filtroConcesionarioId: number | null = null;
   form = { cedula: '', nombre: '', cargo: '', area: '' };
   error = '';
 
   constructor(
-    private empleadoService: EmpleadoService,
-    private concesionarioService: ConcesionarioService
+      private empleadoService: EmpleadoService,
+      private concesionarioService: ConcesionarioService
   ) {}
 
   ngOnInit(): void {
-    this.cargar();
     this.concesionarioService.listar().subscribe(data => this.concesionarios = data);
   }
 
-  cargar(): void {
-    this.empleadoService.listar().subscribe(data => this.empleados = data);
+  onFiltroChange(): void {
+    this.cargar();
   }
 
-  nombreConcesionario(e: Empleado): string {
-    const c: any = e.concesionario;
-    if (c?.nombre) return c.nombre;
-    const encontrado = this.concesionarios.find(x => x.id === c?.id);
-    return encontrado ? encontrado.nombre : ('ID ' + c?.id);
+  cargar(): void {
+    if (!this.filtroConcesionarioId) {
+      this.empleados = [];
+      return;
+    }
+    this.empleadoService.listarPorConcesionario(this.filtroConcesionarioId)
+        .subscribe(data => this.empleados = data);
   }
 
   crear(): void {

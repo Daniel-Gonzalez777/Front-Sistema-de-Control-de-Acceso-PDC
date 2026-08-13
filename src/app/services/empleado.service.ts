@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Empleado } from '../models/empleado.model';
 import { API_BASE } from './api-base';
@@ -12,6 +12,12 @@ export class EmpleadoService {
 
   listar(): Observable<Empleado[]> {
     return this.http.get<Empleado[]>(this.url);
+  }
+
+  // Trae solo los empleados del concesionario indicado.
+  listarPorConcesionario(concesionarioId: number): Observable<Empleado[]> {
+    const params = new HttpParams().set('concesionarioId', concesionarioId);
+    return this.http.get<Empleado[]>(this.url, { params });
   }
 
   crear(e: Empleado): Observable<Empleado> {

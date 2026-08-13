@@ -1,0 +1,215 @@
+/* =====================================================================
+   Paleta de color inspirada en la identidad cafetera del Parque del Café
+   (marrón café, terracota, dorado, crema, verde cafeto).
+   NOTA: no son los hex exactos de su hoja de estilos oficial -- no fue
+   posible extraerlos automáticamente desde aquí. Si los necesitas
+   exactos, abre parquedelcafe.co con F12 → Elements y reemplaza estas
+   variables por los valores reales que encuentres.
+   ===================================================================== */
+:root {
+  --pdc-cafe-rojo: #a71d22;;
+  --pdc-cafe-medio: #6f4a2e;
+  --pdc-terracota: #b5502e;
+  --pdc-terracota-hover: #9a4126;
+  --pdc-dorado: #d9a441;
+  --pdc-dorado-suave: #f3e2bb;
+  --pdc-crema: #faf3e9;
+  --pdc-crema-carta: #ffffff;
+  --pdc-verde-cafeto: #4c6b3f;
+  --pdc-rojo-cereza: #a3372f;
+  --pdc-texto: #2b2118;
+  --pdc-texto-suave: #6b5d4f;
+  --pdc-borde: #e6dac8;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: var(--pdc-crema);
+  color: var(--pdc-texto);
+}
+
+.topbar {
+  background: var(--pdc-cafe-rojo);
+  color: var(--pdc-crema);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  border-bottom: 3px solid var(--pdc-dorado);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.topbar h1 {
+  font-size: 17px;
+  margin: 0;
+  color: var(--pdc-crema);
+  font-weight: 600;
+}
+
+.topbar nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.topbar nav a {
+  color: #ecdfc8;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  transition: background 0.15s ease;
+}
+
+.topbar nav a.active,
+.topbar nav a:hover {
+  background: rgba(217, 164, 65, 0.25);
+  color: #fff;
+}
+
+main {
+  max-width: 1100px;
+  margin: 24px auto;
+  padding: 0 16px;
+  min-height: 60vh;
+}
+
+.card {
+  background: var(--pdc-crema-carta);
+  border: 1px solid var(--pdc-borde);
+  border-radius: 10px;
+  padding: 22px;
+  margin-bottom: 22px;
+  box-shadow: 0 2px 6px rgba(59, 35, 20, 0.08);
+}
+
+h2 { margin-top: 0; font-size: 20px; color: var(--pdc-cafe-oscuro); }
+h3 { font-size: 16px; color: var(--pdc-cafe-oscuro); margin-top: 0; }
+
+.ayuda { color: var(--pdc-texto-suave); font-size: 13.5px; margin-top: -6px; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th, td {
+  text-align: left;
+  padding: 10px 10px;
+  border-bottom: 1px solid var(--pdc-borde);
+}
+
+th {
+  background: #f4ead9;
+  color: var(--pdc-cafe-oscuro);
+  font-weight: 600;
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+tbody tr:hover { background: #fbf6ee; }
+
+form.inline-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+
+label {
+  display: block;
+  font-size: 12px;
+  color: var(--pdc-texto-suave);
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+input, select {
+  width: 100%;
+  padding: 9px 10px;
+  border: 1px solid #d8c8ae;
+  border-radius: 5px;
+  font-size: 14px;
+  background: #fff;
+  color: var(--pdc-texto);
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--pdc-terracota);
+  box-shadow: 0 0 0 3px rgba(181, 80, 46, 0.15);
+}
+
+input:disabled, select:disabled {
+  background: #f2ede3;
+  color: var(--pdc-texto-suave);
+}
+
+button {
+  background: var(--pdc-terracota);
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.15s ease;
+}
+
+button:hover:not(:disabled) { background: var(--pdc-terracota-hover); }
+button:disabled { background: #c9b8a4; cursor: not-allowed; }
+
+button.secondary { background: var(--pdc-cafe-medio); }
+button.secondary:hover:not(:disabled) { background: var(--pdc-cafe-oscuro); }
+
+button.danger { background: var(--pdc-rojo-cereza); }
+button.danger:hover:not(:disabled) { background: #8a2b24; }
+
+.acciones button { margin-right: 6px; }
+.acciones button:last-child { margin-right: 0; }
+
+.badge {
+  display: inline-block;
+  padding: 3px 11px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.badge.ok { background: #e4efdd; color: var(--pdc-verde-cafeto); }
+.badge.no { background: #f6dfdb; color: var(--pdc-rojo-cereza); }
+.badge.info { background: #f3e2bb; color: var(--pdc-cafe-oscuro); }
+
+.resultado {
+  margin-top: 18px;
+  padding: 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  text-align: left;
+}
+
+.resultado.autorizado { background: #e9f2e2; border: 1px solid var(--pdc-verde-cafeto); }
+.resultado.no-autorizado { background: #f8e4e0; border: 1px solid var(--pdc-rojo-cereza); }
+.resultado.salida { background: var(--pdc-dorado-suave); border: 1px solid var(--pdc-dorado); }
+
+.error-msg {
+  color: var(--pdc-rojo-cereza);
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+@media (max-width: 640px) {
+  .topbar { flex-direction: column; align-items: flex-start; }
+  table { display: block; overflow-x: auto; white-space: nowrap; }
+}

@@ -20,6 +20,7 @@
   --pdc-texto: #2b2118;
   --pdc-texto-suave: #6b5d4f;
   --pdc-borde: #e6dac8;
+  --pdc-cafe-oscuro: #000000;
 }
 
 * { box-sizing: border-box; }

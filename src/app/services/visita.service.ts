@@ -18,11 +18,26 @@ export class VisitaService {
     return this.http.get<RegistroVisita[]>(`${this.url}/activas`);
   }
 
-  registrarIngreso(request: RegistroVisitaRequest): Observable<RegistroVisita> {
-    return this.http.post<RegistroVisita>(`${this.url}/ingreso`, request);
+  registrarIngreso(req: RegistroVisitaRequest): Observable<RegistroVisita> {
+    return this.http.post<RegistroVisita>(`${this.url}/ingreso`, req);
   }
 
   registrarSalida(id: number): Observable<RegistroVisita> {
     return this.http.post<RegistroVisita>(`${this.url}/${id}/salida`, {});
+  }
+
+  // Historial de visitas recibidas por un empleado del sistema
+  historialPorEmpleado(empleadoId: number): Observable<RegistroVisita[]> {
+    return this.http.get<RegistroVisita[]>(`${this.url}/empleado/${empleadoId}`);
+  }
+
+  // Historial de visitas recibidas por un empleado directo del parque
+  historialPorEmpleadoDirecto(empleadoDirectoId: number): Observable<RegistroVisita[]> {
+    return this.http.get<RegistroVisita[]>(`${this.url}/empleado-directo/${empleadoDirectoId}`);
+  }
+
+  // Historial de visitas hechas por un visitante
+  historialPorVisitante(visitanteId: number): Observable<RegistroVisita[]> {
+    return this.http.get<RegistroVisita[]>(`${this.url}/visitante/${visitanteId}`);
   }
 }

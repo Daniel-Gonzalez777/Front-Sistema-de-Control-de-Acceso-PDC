@@ -50,7 +50,7 @@ import { EmpleadoDirectoParque } from '../../models/empleado-directo.model';
 
       <table *ngIf="huboBusquedaEmpleado">
         <thead>
-          <tr><th>Visitante</th><th>Documento</th><th>Motivo</th><th>Entrada</th><th>Salida</th></tr>
+          <tr><th>Visitante</th><th>Documento</th><th>Motivo</th><th>Entrada</th><th>Salida</th><th>Vehiculo</th><th>Tipo</th><th>Placa</th></tr>
         </thead>
         <tbody>
           <tr *ngFor="let v of historialEmpleado">
@@ -59,6 +59,9 @@ import { EmpleadoDirectoParque } from '../../models/empleado-directo.model';
             <td>{{ v.motivo || '—' }}</td>
             <td>{{ v.fechaHoraEntrada | date:'short' }}</td>
             <td>{{ v.fechaHoraSalida ? (v.fechaHoraSalida | date:'short') : '— sigue dentro —' }}</td>
+              <td>{{v.ingresaVehiculo ? 'Si' : 'No' }}</td>
+              <td>{{v.tipoVehiculo}}</td>
+              <td>{{v.placaVehiculo}}</td>
           </tr>
           <tr *ngIf="!historialEmpleado.length">
             <td colspan="5">Este empleado no ha recibido visitas todavía.</td>
@@ -87,7 +90,7 @@ import { EmpleadoDirectoParque } from '../../models/empleado-directo.model';
 
       <table *ngIf="visitanteSeleccionadoId">
         <thead>
-          <tr><th>Visitó a</th><th>Motivo</th><th>Entrada</th><th>Salida</th></tr>
+          <tr><th>Visitó a</th><th>Motivo</th><th>Entrada</th><th>Salida</th><th>Vehiculo</th><th>Tipo</th><th>Placa</th></tr>
         </thead>
         <tbody>
           <tr *ngFor="let v of historialVisitante">
@@ -95,6 +98,9 @@ import { EmpleadoDirectoParque } from '../../models/empleado-directo.model';
             <td>{{ v.motivo || '—' }}</td>
             <td>{{ v.fechaHoraEntrada | date:'short' }}</td>
             <td>{{ v.fechaHoraSalida ? (v.fechaHoraSalida | date:'short') : '— sigue dentro —' }}</td>
+              <td>{{v.ingresaVehiculo ? 'Si' : 'No' }}</td>
+              <td>{{v.tipoVehiculo}}</td>
+              <td>{{v.placaVehiculo}}</td>
           </tr>
           <tr *ngIf="!historialVisitante.length">
             <td colspan="4">Este visitante no tiene visitas registradas todavía.</td>

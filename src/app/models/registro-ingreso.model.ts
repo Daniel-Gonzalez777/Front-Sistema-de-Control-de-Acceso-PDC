@@ -18,4 +18,5 @@ export interface RegistroIngresoEmpleado {
   tipoMovimiento: TipoMovimiento;
   motivo: string;
   fechaHora: string;
+
 }

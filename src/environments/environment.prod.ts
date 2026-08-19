@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'https://front-sistema-de-control-de-acceso.vercel.app/'
+    apiUrl: 'sistema-de-control-de-acceso-back-pdc-production.up.railway.app'
 };

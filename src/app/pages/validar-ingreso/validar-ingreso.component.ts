@@ -16,13 +16,21 @@ import { ResultadoValidacion } from '../../models/registro-ingreso.model';
       </p>
 
       <input
-        #inputCedula
-        type="text"
-        placeholder="Número de cédula"
-        [(ngModel)]="cedula"
-        (keyup.enter)="validar()"
-        [disabled]="buscando"
-        class="input-cedula">
+          #inputCedula
+          type="text"
+          placeholder="Número de cédula"
+          [(ngModel)]="cedula"
+          (keyup.enter)="validar()"
+          [disabled]="buscando"
+          class="input-cedula">
+
+      <button
+          type="button"
+          (click)="validar()"
+          [disabled]="buscando"
+          class="btn-validar">
+        {{ buscando ? 'Consultando...' : 'Validar' }}
+      </button>
 
       <p *ngIf="buscando" class="ayuda">Consultando...</p>
       <p *ngIf="error" class="error-msg">{{ error }}</p>
@@ -45,6 +53,15 @@ import { ResultadoValidacion } from '../../models/registro-ingreso.model';
       font-size: 22px;
       padding: 14px;
       text-align: center;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .btn-validar {
+      margin-top: 12px;
+      font-size: 18px;
+      padding: 12px 24px;
+      width: 100%;
+      cursor: pointer;
     }
   `]
 })

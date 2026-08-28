@@ -6,6 +6,7 @@ import { AfiliacionesComponent } from './pages/afiliaciones/afiliaciones.compone
 import { VisitasComponent } from './pages/visitas/visitas.component';
 import { HistorialComponent } from './pages/historial/historial.component';
 import { HistorialVisitasComponent } from './pages/historial-visitas/historial-visitas.component';
+import { CalendarioComponent } from './pages/calendario/calendario.component';
 
 export const routes: Routes = [
   { path: '', component: ValidarIngresoComponent },
@@ -15,5 +16,6 @@ export const routes: Routes = [
   { path: 'visitas', component: VisitasComponent },
   { path: 'historial', component: HistorialComponent },
   { path: 'historial-visitas', component: HistorialVisitasComponent },
+  { path: 'calendario', component: CalendarioComponent },
   { path: '**', redirectTo: '' }
 ];

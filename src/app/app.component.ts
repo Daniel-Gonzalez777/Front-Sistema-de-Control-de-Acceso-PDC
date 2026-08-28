@@ -22,6 +22,7 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
         <a routerLink="/concesionarios" routerLinkActive="active">Concesionarios</a>
         <a routerLink="/historial" routerLinkActive="active">Historial</a>
         <a routerLink="/historial-visitas" routerLinkActive="active">Historial visitas</a>
+        <a routerLink="/calendario" routerLinkActive="active">Calendario</a>
       </nav>
     </header>
 

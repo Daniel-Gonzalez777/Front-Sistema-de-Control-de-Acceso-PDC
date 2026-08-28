@@ -28,31 +28,48 @@ import { RegistroIngresoEmpleado } from '../../models/registro-ingreso.model';
 
     <div class="card">
       <h2>Historial completo de movimientos</h2>
-      <table>
-        <thead><tr><th>Cédula</th><th>Empleado</th><th>Empresa</th><th>Movimiento</th><th>Resultado</th><th>Motivo</th><th>Fecha y hora</th></tr></thead>
-        <tbody>
-        <tr *ngFor="let r of historial">
-          <td>{{ r.cedulaConsultada }}</td>
-          <td>{{ r.empleado?.nombre || 'No registrado' }}</td>
-          <td>{{ r.empleado?.concesionario?.nombre || '—' }}</td>
-          <td>
-              <span class="badge" [class.info]="r.tipoMovimiento === 'SALIDA'" [class.ok]="r.tipoMovimiento === 'ENTRADA'">
-                {{ r.tipoMovimiento }}
-              </span>
-          </td>
-          <td>
-              <span class="badge" [class.ok]="r.resultado === 'AUTORIZADO'" [class.no]="r.resultado === 'NO_AUTORIZADO'">
-                {{ r.resultado === 'AUTORIZADO' ? 'Autorizado' : 'No autorizado' }}
-              </span>
-          </td>
-          <td>{{ r.motivo }}</td>
-          <td>{{ r.fechaHora | date:'short' }}</td>
-        </tr>
-        <tr *ngIf="!historial.length"><td colspan="7">Todavía no hay movimientos registrados.</td></tr>
-        </tbody>
-      </table>
+      <p class="ayuda">Se conservan automáticamente los últimos 14 días (los registros más viejos se eliminan solos, excepto el último movimiento de cada empleado).</p>
+      <div class="tabla-scroll">
+        <table>
+          <thead><tr><th>Cédula</th><th>Empleado</th><th>Empresa</th><th>Movimiento</th><th>Resultado</th><th>Motivo</th><th>Fecha y hora</th></tr></thead>
+          <tbody>
+          <tr *ngFor="let r of historial">
+            <td>{{ r.cedulaConsultada }}</td>
+            <td>{{ r.empleado?.nombre || 'No registrado' }}</td>
+            <td>{{ r.empleado?.concesionario?.nombre || '—' }}</td>
+            <td>
+                <span class="badge" [class.info]="r.tipoMovimiento === 'SALIDA'" [class.ok]="r.tipoMovimiento === 'ENTRADA'">
+                  {{ r.tipoMovimiento }}
+                </span>
+            </td>
+            <td>
+                <span class="badge" [class.ok]="r.resultado === 'AUTORIZADO'" [class.no]="r.resultado === 'NO_AUTORIZADO'">
+                  {{ r.resultado === 'AUTORIZADO' ? 'Autorizado' : 'No autorizado' }}
+                </span>
+            </td>
+            <td>{{ r.motivo }}</td>
+            <td>{{ r.fechaHora | date:'short' }}</td>
+          </tr>
+          <tr *ngIf="!historial.length"><td colspan="7">Todavía no hay movimientos registrados.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-  `
+  `,
+  styles: [`
+    .tabla-scroll {
+      max-height: 480px;
+      overflow-y: auto;
+      border: 1px solid var(--pdc-borde, #e6dac8);
+      border-radius: 8px;
+    }
+    .tabla-scroll table { margin: 0; }
+    .tabla-scroll thead th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+  `]
 })
 export class HistorialComponent implements OnInit {
   dentro: RegistroIngresoEmpleado[] = [];

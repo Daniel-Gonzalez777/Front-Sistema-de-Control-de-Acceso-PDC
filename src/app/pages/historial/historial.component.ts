@@ -11,16 +11,17 @@ import { RegistroIngresoEmpleado } from '../../models/registro-ingreso.model';
     <div class="card">
       <h2>Empleados dentro del Parque ahora mismo</h2>
       <table>
-        <thead><tr><th>Cédula</th><th>Nombre</th><th>Cargo</th><th>Área</th><th>Hora de ingreso</th></tr></thead>
+        <thead><tr><th>Cédula</th><th>Nombre</th><th>Empresa</th><th>Cargo</th><th>Área</th><th>Hora de ingreso</th></tr></thead>
         <tbody>
-          <tr *ngFor="let r of dentro">
-            <td>{{ r.cedulaConsultada }}</td>
-            <td>{{ r.empleado?.nombre || '—' }}</td>
-            <td>{{ r.empleado?.cargo || '—' }}</td>
-            <td>{{ r.empleado?.area || '—' }}</td>
-            <td>{{ r.fechaHora | date:'short' }}</td>
-          </tr>
-          <tr *ngIf="!dentro.length"><td colspan="5">No hay nadie registrado como "dentro" en este momento.</td></tr>
+        <tr *ngFor="let r of dentro">
+          <td>{{ r.cedulaConsultada }}</td>
+          <td>{{ r.empleado?.nombre || '—' }}</td>
+          <td>{{ r.empleado?.concesionario?.nombre || '—' }}</td>
+          <td>{{ r.empleado?.cargo || '—' }}</td>
+          <td>{{ r.empleado?.area || '—' }}</td>
+          <td>{{ r.fechaHora | date:'short' }}</td>
+        </tr>
+        <tr *ngIf="!dentro.length"><td colspan="6">No hay nadie registrado como "dentro" en este momento.</td></tr>
         </tbody>
       </table>
     </div>
@@ -28,25 +29,26 @@ import { RegistroIngresoEmpleado } from '../../models/registro-ingreso.model';
     <div class="card">
       <h2>Historial completo de movimientos</h2>
       <table>
-        <thead><tr><th>Cédula</th><th>Empleado</th><th>Movimiento</th><th>Resultado</th><th>Motivo</th><th>Fecha y hora</th></tr></thead>
+        <thead><tr><th>Cédula</th><th>Empleado</th><th>Empresa</th><th>Movimiento</th><th>Resultado</th><th>Motivo</th><th>Fecha y hora</th></tr></thead>
         <tbody>
-          <tr *ngFor="let r of historial">
-            <td>{{ r.cedulaConsultada }}</td>
-            <td>{{ r.empleado?.nombre || 'No registrado' }}</td>
-            <td>
+        <tr *ngFor="let r of historial">
+          <td>{{ r.cedulaConsultada }}</td>
+          <td>{{ r.empleado?.nombre || 'No registrado' }}</td>
+          <td>{{ r.empleado?.concesionario?.nombre || '—' }}</td>
+          <td>
               <span class="badge" [class.info]="r.tipoMovimiento === 'SALIDA'" [class.ok]="r.tipoMovimiento === 'ENTRADA'">
                 {{ r.tipoMovimiento }}
               </span>
-            </td>
-            <td>
+          </td>
+          <td>
               <span class="badge" [class.ok]="r.resultado === 'AUTORIZADO'" [class.no]="r.resultado === 'NO_AUTORIZADO'">
                 {{ r.resultado === 'AUTORIZADO' ? 'Autorizado' : 'No autorizado' }}
               </span>
-            </td>
-            <td>{{ r.motivo }}</td>
-            <td>{{ r.fechaHora | date:'short' }}</td>
-          </tr>
-          <tr *ngIf="!historial.length"><td colspan="6">Todavía no hay movimientos registrados.</td></tr>
+          </td>
+          <td>{{ r.motivo }}</td>
+          <td>{{ r.fechaHora | date:'short' }}</td>
+        </tr>
+        <tr *ngIf="!historial.length"><td colspan="7">Todavía no hay movimientos registrados.</td></tr>
         </tbody>
       </table>
     </div>

@@ -13,7 +13,7 @@ export interface ResultadoValidacion {
 export interface RegistroIngresoEmpleado {
   id: number;
   cedulaConsultada: string;
-  empleado: { id: number; nombre: string; cargo?: string; area?: string } | null;
+  empleado: { id: number; nombre: string; cargo?: string; area?: string; concesionario?: { id: number; nombre: string } } | null;
   resultado: ResultadoIngresoTipo;
   tipoMovimiento: TipoMovimiento;
   motivo: string;

@@ -5,6 +5,7 @@ import { CalendarioService } from '../../services/calendario.service';
 import { ConcesionarioService } from '../../services/concesionario.service';
 import { Concesionario } from '../../models/concesionario.model';
 import { CalendarioMensual, DiaCalendario, MovimientoCalendario } from '../../models/calendario.model';
+import { ToastService } from '../../services/toast.service';
 
 const NOMBRES_MES = [
   'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -55,7 +56,6 @@ interface CeldaCalendario {
         </div>
       </div>
 
-      <div *ngIf="error" class="error-msg">{{ error }}</div>
       <p *ngIf="cargando" class="ayuda">Cargando calendario...</p>
 
       <div *ngIf="!cargando && concesionarioId" class="grid-calendario">
@@ -206,11 +206,11 @@ export class CalendarioComponent implements OnInit {
 
   cargando = false;
   exportando = false;
-  error = '';
 
   constructor(
       private calendarioService: CalendarioService,
-      private concesionarioService: ConcesionarioService
+      private concesionarioService: ConcesionarioService,
+      private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -237,7 +237,6 @@ export class CalendarioComponent implements OnInit {
     if (!this.concesionarioId) return;
 
     this.cargando = true;
-    this.error = '';
     this.diaSeleccionado = null;
     this.movimientosDelDiaSeleccionado = [];
 
@@ -248,7 +247,7 @@ export class CalendarioComponent implements OnInit {
         this.cargando = false;
       },
       error: (err) => {
-        this.error = 'No se pudo cargar el calendario: ' + (err.error?.message || err.message);
+        this.toastService.error('No se pudo cargar el calendario: ' + (err.error?.message || err.message));
         this.cargando = false;
       }
     });
@@ -307,9 +306,10 @@ export class CalendarioComponent implements OnInit {
         a.click();
         window.URL.revokeObjectURL(url);
         this.exportando = false;
+        this.toastService.exito('Calendario exportado.');
       },
       error: (err) => {
-        this.error = 'No se pudo exportar: ' + (err.error?.message || err.message);
+        this.toastService.error('No se pudo exportar: ' + (err.error?.message || err.message));
         this.exportando = false;
       }
     });

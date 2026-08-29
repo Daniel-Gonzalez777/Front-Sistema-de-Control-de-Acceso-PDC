@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConcesionarioService } from '../../services/concesionario.service';
 import { Concesionario } from '../../models/concesionario.model';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-concesionarios',
@@ -32,7 +33,6 @@ import { Concesionario } from '../../models/concesionario.model';
           <button type="button" class="secondary" *ngIf="editandoId" (click)="cancelarEdicion()">Cancelar</button>
         </div>
       </form>
-      <div *ngIf="error" class="error-msg">{{ error }}</div>
     </div>
 
     <div class="card">
@@ -61,9 +61,11 @@ export class ConcesionariosComponent implements OnInit {
   concesionarios: Concesionario[] = [];
   form: Concesionario = { nombre: '', nit: '', activo: true };
   editandoId: number | null = null;
-  error = '';
 
-  constructor(private concesionarioService: ConcesionarioService) {}
+  constructor(
+      private concesionarioService: ConcesionarioService,
+      private toastService: ToastService
+  ) {}
 
   ngOnInit(): void {
     this.cargar();
@@ -74,17 +76,18 @@ export class ConcesionariosComponent implements OnInit {
   }
 
   guardar(): void {
-    this.error = '';
+    const esEdicion = !!this.editandoId;
     const accion = this.editandoId
       ? this.concesionarioService.actualizar(this.editandoId, this.form)
       : this.concesionarioService.crear(this.form);
 
     accion.subscribe({
       next: () => {
+        this.toastService.exito(esEdicion ? 'Concesionario actualizado.' : 'Concesionario creado.');
         this.cancelarEdicion();
         this.cargar();
       },
-      error: (err) => this.error = 'No se pudo guardar: ' + (err.error?.message || err.message)
+      error: (err) => this.toastService.error('No se pudo guardar: ' + (err.error?.message || err.message))
     });
   }
 
@@ -103,8 +106,11 @@ export class ConcesionariosComponent implements OnInit {
     if (!confirm(`¿Eliminar el concesionario "${c.nombre}"? Esto puede fallar si ya tiene empleados asociados.`)) return;
 
     this.concesionarioService.eliminar(c.id).subscribe({
-      next: () => this.cargar(),
-      error: (err) => this.error = 'No se pudo eliminar: ' + (err.error?.message || err.message)
+      next: () => {
+        this.toastService.exito('Concesionario eliminado.');
+        this.cargar();
+      },
+      error: (err) => this.toastService.error('No se pudo eliminar: ' + (err.error?.message || err.message))
     });
   }
 }

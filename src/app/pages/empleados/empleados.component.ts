@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EmpleadoService } from '../../services/empleado.service';
 import { ConcesionarioService } from '../../services/concesionario.service';
+import { ToastService } from '../../services/toast.service';
 import { Empleado } from '../../models/empleado.model';
 import { Concesionario } from '../../models/concesionario.model';
 
@@ -42,7 +43,6 @@ import { Concesionario } from '../../models/concesionario.model';
           <button type="submit" [disabled]="!f.valid || !concesionarioId">Crear</button>
         </div>
       </form>
-      <div *ngIf="error" class="error-msg">{{ error }}</div>
     </div>
 
     <div class="card">
@@ -84,11 +84,11 @@ export class EmpleadosComponent implements OnInit {
   concesionarioId: number | null = null;
   filtroConcesionarioId: number | null = null;
   form = { cedula: '', nombre: '', cargo: '', area: '' };
-  error = '';
 
   constructor(
       private empleadoService: EmpleadoService,
-      private concesionarioService: ConcesionarioService
+      private concesionarioService: ConcesionarioService,
+      private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -110,7 +110,6 @@ export class EmpleadosComponent implements OnInit {
 
   crear(): void {
     if (!this.concesionarioId) return;
-    this.error = '';
 
     const nuevo: Empleado = {
       cedula: this.form.cedula,
@@ -124,9 +123,10 @@ export class EmpleadosComponent implements OnInit {
       next: () => {
         this.form = { cedula: '', nombre: '', cargo: '', area: '' };
         this.concesionarioId = null;
+        this.toastService.exito('Empleado creado.');
         this.cargar();
       },
-      error: (err) => this.error = 'No se pudo crear (¿cédula duplicada?): ' + (err.error?.message || err.message)
+      error: (err) => this.toastService.error('No se pudo crear (¿cédula duplicada?): ' + (err.error?.message || err.message))
     });
   }
 
@@ -135,8 +135,11 @@ export class EmpleadosComponent implements OnInit {
     if (!confirm(`¿Eliminar a "${e.nombre}"? Esto puede fallar si ya tiene afiliaciones o visitas asociadas.`)) return;
 
     this.empleadoService.eliminar(e.id).subscribe({
-      next: () => this.cargar(),
-      error: (err) => this.error = 'No se pudo eliminar: ' + (err.error?.message || err.message)
+      next: () => {
+        this.toastService.exito('Empleado eliminado.');
+        this.cargar();
+      },
+      error: (err) => this.toastService.error('No se pudo eliminar: ' + (err.error?.message || err.message))
     });
   }
 }

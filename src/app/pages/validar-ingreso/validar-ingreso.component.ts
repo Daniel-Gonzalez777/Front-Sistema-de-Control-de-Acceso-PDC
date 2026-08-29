@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IngresoService } from '../../services/ingreso.service';
 import { ResultadoValidacion } from '../../models/registro-ingreso.model';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-validar-ingreso',
@@ -16,24 +17,23 @@ import { ResultadoValidacion } from '../../models/registro-ingreso.model';
       </p>
 
       <input
-          #inputCedula
-          type="text"
-          placeholder="Número de cédula"
-          [(ngModel)]="cedula"
-          (keyup.enter)="validar()"
-          [disabled]="buscando"
-          class="input-cedula">
+        #inputCedula
+        type="text"
+        placeholder="Número de cédula"
+        [(ngModel)]="cedula"
+        (keyup.enter)="validar()"
+        [disabled]="buscando"
+        class="input-cedula">
 
       <button
-          type="button"
-          (click)="validar()"
-          [disabled]="buscando"
-          class="btn-validar">
+        type="button"
+        (click)="validar()"
+        [disabled]="buscando"
+        class="btn-validar">
         {{ buscando ? 'Consultando...' : 'Validar' }}
       </button>
 
       <p *ngIf="buscando" class="ayuda">Consultando...</p>
-      <p *ngIf="error" class="error-msg">{{ error }}</p>
 
       <div *ngIf="resultado" class="resultado" [ngClass]="claseResultado()">
         <h3>{{ tituloResultado() }}</h3>
@@ -69,11 +69,13 @@ export class ValidarIngresoComponent implements AfterViewInit {
   cedula = '';
   resultado: ResultadoValidacion | null = null;
   buscando = false;
-  error = '';
 
   @ViewChild('inputCedula') inputCedula!: ElementRef<HTMLInputElement>;
 
-  constructor(private ingresoService: IngresoService) {}
+  constructor(
+      private ingresoService: IngresoService,
+      private toastService: ToastService
+  ) {}
 
   ngAfterViewInit(): void {
     this.enfocarInput();
@@ -83,7 +85,6 @@ export class ValidarIngresoComponent implements AfterViewInit {
     if (!this.cedula.trim()) return;
 
     this.buscando = true;
-    this.error = '';
     this.resultado = null;
 
     this.ingresoService.validarCedula(this.cedula.trim()).subscribe({
@@ -94,7 +95,7 @@ export class ValidarIngresoComponent implements AfterViewInit {
         this.enfocarInput();
       },
       error: () => {
-        this.error = 'No se pudo consultar el sistema. Verifica que el backend esté corriendo.';
+        this.toastService.error('No se pudo consultar el sistema. Verifica que el backend esté corriendo.');
         this.buscando = false;
         this.enfocarInput();
       }

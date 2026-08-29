@@ -8,6 +8,7 @@ import { Afiliacion } from '../../models/afiliacion.model';
 import { Empleado } from '../../models/empleado.model';
 import { Concesionario } from '../../models/concesionario.model';
 import { ResultadoCarga } from '../../models/resultado-carga.model';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-afiliaciones',
@@ -113,7 +114,6 @@ import { ResultadoCarga } from '../../models/resultado-carga.model';
 
         <div><button type="submit" [disabled]="!f.valid">Guardar</button></div>
       </form>
-      <div *ngIf="error" class="error-msg">{{ error }}</div>
     </div>
 
     <!-- LISTADO -->
@@ -194,12 +194,11 @@ export class AfiliacionesComponent implements OnInit {
   arl = '';
   fechaAfiliacionARL = '';
 
-  error = '';
-
   constructor(
       private afiliacionService: AfiliacionService,
       private empleadoService: EmpleadoService,
-      private concesionarioService: ConcesionarioService
+      private concesionarioService: ConcesionarioService,
+      private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -246,7 +245,6 @@ export class AfiliacionesComponent implements OnInit {
   }
 
   crear(): void {
-    this.error = '';
     if (!this.empleadoId) return;
 
     const nueva: Afiliacion = {
@@ -270,9 +268,10 @@ export class AfiliacionesComponent implements OnInit {
         this.eps = ''; this.fechaAfiliacionSalud = '';
         this.afp = ''; this.fechaAfiliacionPension = '';
         this.arl = ''; this.fechaAfiliacionARL = '';
+        this.toastService.exito('Afiliación guardada.');
         this.cargar();
       },
-      error: (err) => this.error = 'No se pudo guardar (revisa si ya existe una afiliación para ese empleado/mes): ' + (err.error?.error || err.message)
+      error: (err) => this.toastService.error('No se pudo guardar (revisa si ya existe una afiliación para ese empleado/mes): ' + (err.error?.error || err.message))
     });
   }
 }

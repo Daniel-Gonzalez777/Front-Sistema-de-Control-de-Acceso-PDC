@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { ToastComponent } from './shared/toast/toast.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, ToastComponent],
   template: `
     <header class="topbar">
       <div class="topbar-marca">
@@ -33,6 +34,8 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
     <footer class="footer">
       Sistema interno de control de acceso — Parque del Café
     </footer>
+
+    <app-toast></app-toast>
   `,
   styles: [`
     .topbar-marca {

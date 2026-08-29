@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { VisitaService } from '../../services/visita.service';
 import { EmpleadoService } from '../../services/empleado.service';
 import { EmpleadoDirectoService } from '../../services/empleado-directo.service';
+import { ToastService } from '../../services/toast.service';
 import { RegistroVisita, RegistroVisitaRequest } from '../../models/visita.model';
 import { Empleado } from '../../models/empleado.model';
 
@@ -89,7 +90,7 @@ import { Empleado } from '../../models/empleado.model';
           <button type="submit" [disabled]="!f.valid">Registrar ingreso</button>
         </div>
       </form>
-      <div *ngIf="error" class="error-msg">{{ error }}</div>
+
     </div>
 
     <div class="card">
@@ -162,7 +163,6 @@ export class VisitasComponent implements OnInit {
   todas: RegistroVisita[] = [];
   empleados: Empleado[] = [];
   areasDisponibles: string[] = [];
-  error = '';
 
   tipoEmpleado: 'sistema' | 'directo' = 'sistema';
 
@@ -180,7 +180,8 @@ export class VisitasComponent implements OnInit {
   constructor(
       private visitaService: VisitaService,
       private empleadoService: EmpleadoService,
-      private empleadoDirectoService: EmpleadoDirectoService
+      private empleadoDirectoService: EmpleadoDirectoService,
+      private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -209,7 +210,6 @@ export class VisitasComponent implements OnInit {
   }
 
   registrarIngreso(): void {
-    this.error = '';
     this.visitaService.registrarIngreso(this.req).subscribe({
       next: () => {
         this.req = {
@@ -217,17 +217,21 @@ export class VisitasComponent implements OnInit {
           motivo: '', ingresaVehiculo: false, placaVehiculo: '', tipoVehiculo: '', zonaParqueo: ''
         };
         this.tipoEmpleado = 'sistema';
+        this.toastService.exito('Ingreso de visitante registrado.');
         this.cargar();
       },
-      error: (err) => this.error = 'No se pudo registrar: ' + (err.error?.message || err.message)
+      error: (err) => this.toastService.error('No se pudo registrar: ' + (err.error?.message || err.message))
     });
   }
 
   registrarSalida(v: RegistroVisita): void {
     if (!v.id) return;
     this.visitaService.registrarSalida(v.id).subscribe({
-      next: () => this.cargar(),
-      error: (err) => this.error = 'No se pudo registrar la salida: ' + (err.error?.message || err.message)
+      next: () => {
+        this.toastService.exito('Salida registrada.');
+        this.cargar();
+      },
+      error: (err) => this.toastService.error('No se pudo registrar la salida: ' + (err.error?.message || err.message))
     });
   }
 }

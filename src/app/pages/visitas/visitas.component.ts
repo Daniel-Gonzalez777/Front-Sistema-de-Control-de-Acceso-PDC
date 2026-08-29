@@ -117,28 +117,45 @@ import { Empleado } from '../../models/empleado.model';
 
     <div class="card">
       <h2>Histórico de visitas</h2>
-      <table>
-        <thead>
-        <tr><th>Visitante</th><th>Visita a</th><th>Entrada</th><th>Salida</th></tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let v of todas">
-          <td>{{ v.visitante.nombre }}</td>
-          <td>{{ nombreVisitado(v) }}</td>
-          <td>{{ v.fechaHoraEntrada | date:'short' }}</td>
-          <td>{{ v.fechaHoraSalida ? (v.fechaHoraSalida | date:'short') : '— sigue dentro —' }}</td>
-        </tr>
-        <tr *ngIf="!todas.length">
-          <td colspan="4">Sin registros todavía.</td>
-        </tr>
-        </tbody>
-      </table>
+      <p class="ayuda">Se conservan automáticamente los últimos 14 días (las visitas ya cerradas y más antiguas se eliminan solas; las que siguen dentro nunca se borran).</p>
+      <div class="tabla-scroll">
+        <table>
+          <thead>
+          <tr><th>Visitante</th><th>Visita a</th><th>Entrada</th><th>Salida</th></tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let v of todas">
+            <td>{{ v.visitante.nombre }}</td>
+            <td>{{ nombreVisitado(v) }}</td>
+            <td>{{ v.fechaHoraEntrada | date:'short' }}</td>
+            <td>{{ v.fechaHoraSalida ? (v.fechaHoraSalida | date:'short') : '— sigue dentro —' }}</td>
+          </tr>
+          <tr *ngIf="!todas.length">
+            <td colspan="4">Sin registros todavía.</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
       <p class="ayuda">
         ¿Buscas el historial de un empleado o de un visitante en particular?
         Ve a la sección <strong>Historial de visitas</strong> en el menú.
       </p>
     </div>
-  `
+  `,
+  styles: [`
+    .tabla-scroll {
+      max-height: 480px;
+      overflow-y: auto;
+      border: 1px solid var(--pdc-borde, #e6dac8);
+      border-radius: 8px;
+    }
+    .tabla-scroll table { margin: 0; }
+    .tabla-scroll thead th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+  `]
 })
 export class VisitasComponent implements OnInit {
   activas: RegistroVisita[] = [];

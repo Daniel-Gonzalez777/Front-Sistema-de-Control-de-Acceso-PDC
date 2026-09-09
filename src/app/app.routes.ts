@@ -7,15 +7,25 @@ import { VisitasComponent } from './pages/visitas/visitas.component';
 import { HistorialComponent } from './pages/historial/historial.component';
 import { HistorialVisitasComponent } from './pages/historial-visitas/historial-visitas.component';
 import { CalendarioComponent } from './pages/calendario/calendario.component';
+import { LoginComponent } from './pages/login/login.component';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', component: ValidarIngresoComponent },
-  { path: 'concesionarios', component: ConcesionariosComponent },
-  { path: 'empleados', component: EmpleadosComponent },
-  { path: 'afiliaciones', component: AfiliacionesComponent },
-  { path: 'visitas', component: VisitasComponent },
-  { path: 'historial', component: HistorialComponent },
-  { path: 'historial-visitas', component: HistorialVisitasComponent },
-  { path: 'calendario', component: CalendarioComponent },
+  { path: 'login', component: LoginComponent },
+
+  // Portería (y Admin)
+  { path: '', component: ValidarIngresoComponent, canActivate: [authGuard], data: { roles: ['ADMIN', 'PORTERIA'] } },
+  { path: 'visitas', component: VisitasComponent, canActivate: [authGuard], data: { roles: ['ADMIN', 'PORTERIA'] } },
+  { path: 'historial-visitas', component: HistorialVisitasComponent, canActivate: [authGuard], data: { roles: ['ADMIN', 'PORTERIA'] } },
+
+  // Concesionario (y Admin)
+  { path: 'afiliaciones', component: AfiliacionesComponent, canActivate: [authGuard], data: { roles: ['ADMIN', 'CONCESIONARIO'] } },
+  { path: 'empleados', component: EmpleadosComponent, canActivate: [authGuard], data: { roles: ['ADMIN', 'CONCESIONARIO'] } },
+  { path: 'concesionarios', component: ConcesionariosComponent, canActivate: [authGuard], data: { roles: ['ADMIN', 'CONCESIONARIO'] } },
+  { path: 'calendario', component: CalendarioComponent, canActivate: [authGuard], data: { roles: ['ADMIN', 'CONCESIONARIO'] } },
+
+  // Compartida entre los 3 roles
+  { path: 'historial', component: HistorialComponent, canActivate: [authGuard], data: { roles: ['ADMIN', 'PORTERIA', 'CONCESIONARIO'] } },
+
   { path: '**', redirectTo: '' }
 ];

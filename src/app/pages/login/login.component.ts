@@ -13,18 +13,24 @@ import { AuthService } from '../../services/auth.service';
         <div class="login-page">
 
             <!-- =====================================================
-                 FONDO
+                 FONDO (recortado exacto: la imagen y sus decoraciones
+                 quedan encerradas en este contenedor con overflow:hidden,
+                 así el zoom animado nunca se sale de la pantalla.
             ====================================================== -->
 
-            <div class="fondo-imagen"></div>
-            <div class="fondo-overlay"></div>
+            <div class="fondo-contenedor">
 
-            <!-- Decoraciones -->
-            <div class="hoja hoja-1">🍃</div>
-            <div class="hoja hoja-2">🌿</div>
-            <div class="grano grano-1"></div>
-            <div class="grano grano-2"></div>
-            <div class="grano grano-3"></div>
+                <div class="fondo-imagen"></div>
+                <div class="fondo-overlay"></div>
+
+                <!-- Decoraciones -->
+                <div class="hoja hoja-1">🍃</div>
+                <div class="hoja hoja-2">🌿</div>
+                <div class="grano grano-1"></div>
+                <div class="grano grano-2"></div>
+                <div class="grano grano-3"></div>
+
+            </div>
 
 
             <!-- =====================================================
@@ -321,23 +327,27 @@ import { AuthService } from '../../services/auth.service';
             padding: 0;
             width: 100%;
             min-height: 100%;
+            overflow-x: hidden; /* en los dos niveles: html Y body */
         }
 
-        body {
-            overflow-x: hidden;
-        }
-        
-        
+
         :host {
             display: block;
 
             position: fixed;
             inset: 0;
 
-            width: 100vw;
-            height: 100vh;
+            /* "inset: 0" ya estira el elemento exactamente al tamaño del
+               viewport -- no hace falta (ni conviene) repetirlo con
+               100vw/100vh, porque 100vw cuenta el ancho de la barra de
+               scroll del sistema y puede generar un scroll horizontal
+               fantasma de unos pocos píxeles. Con 100% basta. */
+            width: 100%;
+            height: 100%;
 
             z-index: 9999;
+
+            overflow: hidden;
 
             --verde-oscuro: #173d2b;
             --verde: #2f6545;
@@ -372,7 +382,11 @@ import { AuthService } from '../../services/auth.service';
 
             position: relative;
 
-            overflow: auto;
+            /* Scroll solo si el CONTENIDO real (no el fondo) no cabe en
+               pantallas muy bajitas -- el fondo ya no puede provocar
+               este scroll porque queda recortado en su propio contenedor. */
+            overflow-y: auto;
+            overflow-x: hidden;
 
             display: flex;
             align-items: center;
@@ -386,6 +400,29 @@ import { AuthService } from '../../services/auth.service';
                     Arial,
                     Helvetica,
                     sans-serif;
+        }
+
+
+
+        /* =========================================================
+           CONTENEDOR DEL FONDO (recorta el zoom y las decoraciones
+           para que nunca se salgan de la pantalla)
+        ========================================================= */
+
+        .fondo-contenedor {
+
+            position: absolute;
+
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            overflow: hidden;
+
+            z-index: 0;
+
+            pointer-events: none;
         }
 
 
@@ -422,6 +459,9 @@ import { AuthService } from '../../services/auth.service';
             }
 
             to {
+                /* Antes llegaba a 1.08; con el contenedor recortando de
+                   todas formas, se deja así pero YA no genera scroll,
+                   solo queda oculto el excedente. */
                 transform: scale(1.08);
             }
 
@@ -462,7 +502,7 @@ import { AuthService } from '../../services/auth.service';
 
             position: absolute;
 
-            z-index: 1;
+            z-index: 2;
 
             opacity: 0.15;
 
@@ -529,7 +569,7 @@ import { AuthService } from '../../services/auth.service';
 
             position: absolute;
 
-            z-index: 1;
+            z-index: 2;
 
             width: 16px;
             height: 23px;
@@ -1558,6 +1598,25 @@ import { AuthService } from '../../services/auth.service';
 
 
         /* =========================================================
+           ESCRITORIO GRANDE (afina el respiro en pantallas anchas,
+           sin dejar el contenido "flotando" con demasiado vacío)
+        ========================================================= */
+
+        @media (min-width: 1400px) {
+
+            .contenido {
+
+                max-width: 1180px;
+
+                gap: 90px;
+
+            }
+
+        }
+
+
+
+        /* =========================================================
            TABLETS
         ========================================================= */
 
@@ -1766,12 +1825,28 @@ import { AuthService } from '../../services/auth.service';
 
                 height: 50px;
 
+                /* 16px mínimo: por debajo de eso, Safari en iPhone hace
+                   zoom automático al tocar el campo -- muy molesto y
+                   fácil de pasar por alto si solo pruebas en Android
+                   o en el navegador de escritorio. */
+                font-size: 16px;
+
             }
 
 
             .btn-ingresar {
 
                 height: 51px;
+
+            }
+
+
+            /* En pantallas chicas, las hojas/granos flotantes le restan
+               espacio útil y se ven recargados -- se ocultan aquí. */
+            .hoja,
+            .grano {
+
+                display: none;
 
             }
 
@@ -1855,6 +1930,79 @@ import { AuthService } from '../../services/auth.service';
             .presentacion {
 
                 min-height: 570px;
+
+            }
+
+        }
+
+
+
+        /* =========================================================
+           CELULAR EN HORIZONTAL (poca altura): la tarjeta de
+           presentación ocupaba tanto alto que el formulario terminaba
+           empujado fuera de pantalla. Se oculta la presentación y se
+           prioriza el formulario, que es lo que la persona necesita
+           usar en ese momento.
+        ========================================================= */
+
+        @media (max-height: 480px) and (orientation: landscape) {
+
+            .login-page {
+
+                align-items: flex-start;
+
+                padding: 14px;
+
+            }
+
+
+            .presentacion {
+
+                display: none;
+
+            }
+
+
+            .contenido {
+
+                grid-template-columns: 1fr;
+
+                max-width: 420px;
+
+                margin: 0 auto;
+
+            }
+
+
+            .login-card {
+
+                padding: 22px 24px;
+
+            }
+
+
+            .login-header {
+
+                margin-bottom: 16px;
+
+            }
+
+
+            .icono-login {
+
+                width: 44px;
+                height: 44px;
+
+                font-size: 20px;
+
+                margin-bottom: 10px;
+
+            }
+
+
+            footer {
+
+                display: none;
 
             }
 

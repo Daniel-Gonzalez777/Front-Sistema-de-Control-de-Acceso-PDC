@@ -10,30 +10,56 @@ import { AuthService } from '../../services/auth.service';
     imports: [CommonModule, FormsModule],
 
     template: `
-        <div class="login-fondo">
+        <div class="login-page">
 
-            <!-- Fondo decorativo -->
-            <div class="circulo circulo-1"></div>
-            <div class="circulo circulo-2"></div>
-            <div class="circulo circulo-3"></div>
+            <!-- =====================================================
+                 FONDO
+            ====================================================== -->
 
-            <div class="login-contenedor">
+            <div class="fondo-imagen"></div>
+            <div class="fondo-overlay"></div>
 
-                <!-- Panel izquierdo -->
-                <div class="panel-informacion">
+            <!-- Decoraciones -->
+            <div class="hoja hoja-1">🍃</div>
+            <div class="hoja hoja-2">🌿</div>
+            <div class="grano grano-1"></div>
+            <div class="grano grano-2"></div>
+            <div class="grano grano-3"></div>
 
-                    <div class="marca">
+
+            <!-- =====================================================
+                 CONTENIDO PRINCIPAL
+            ====================================================== -->
+
+            <div class="contenido">
+
+
+                <!-- =================================================
+                     INFORMACIÓN DEL PARQUE
+                ================================================== -->
+
+                <section class="presentacion">
+
+                    <div class="logo-contenedor">
+
                         <img
                                 src="https://parquedelcafe.co/wp-content/uploads/2021/05/Logo-Parque-Del-Cafe.png"
-                                alt="Parque del Café">
+                                alt="Parque del Café"
+                                class="logo"
+                        >
+
                     </div>
 
-                    <div class="informacion-centro">
-                        <span class="etiqueta">SISTEMA INTERNO</span>
+
+                    <div class="texto-presentacion">
+
+            <span class="etiqueta">
+              SISTEMA INTERNO
+            </span>
 
                         <h1>
-                            Control de<br>
-                            <span>Acceso</span>
+                            Control de
+                            <strong>Acceso</strong>
                         </h1>
 
                         <p>
@@ -41,27 +67,61 @@ import { AuthService } from '../../services/auth.service';
                             y concesionarios del Parque del Café.
                         </p>
 
-                        <div class="linea-decorativa"></div>
+                        <div class="decoracion">
+                            <span></span>
+                            <b>☕</b>
+                            <span></span>
+                        </div>
+
+
+                        <div class="ubicacion">
+
+                            <div class="ubicacion-icono">
+                                📍
+                            </div>
+
+                            <div>
+                                <strong>Montenegro, Quindío</strong>
+                                <small>
+                                    Corazón del Eje Cafetero
+                                </small>
+                            </div>
+
+                        </div>
+
                     </div>
 
-                    <div class="informacion-pie">
-                        <span class="punto"></span>
+
+                    <div class="estado-sistema">
+
+                        <span class="estado-punto"></span>
+
                         Sistema protegido
+
                     </div>
 
-                </div>
+                </section>
 
 
-                <!-- Tarjeta de login -->
-                <div class="login-card">
+
+                <!-- =================================================
+                     LOGIN
+                ================================================== -->
+
+                <section class="login-card">
+
+
+                    <!-- Encabezado -->
 
                     <div class="login-header">
 
                         <div class="icono-login">
-                            <span>🔐</span>
+                            ☕
                         </div>
 
-                        <h2>Bienvenido</h2>
+                        <h2>
+                            ¡Bienvenido!
+                        </h2>
 
                         <p>
                             Ingresa tus credenciales para continuar
@@ -70,22 +130,27 @@ import { AuthService } from '../../services/auth.service';
                     </div>
 
 
+
+                    <!-- Formulario -->
+
                     <form
                             (ngSubmit)="ingresar()"
                             #f="ngForm"
                             autocomplete="off"
                     >
 
+
                         <!-- Usuario -->
+
                         <div class="campo">
 
                             <label for="username">
                                 Usuario
                             </label>
 
-                            <div class="input-contenedor">
+                            <div class="input-wrapper">
 
-                <span class="input-icono">
+                <span class="input-icon">
                   👤
                 </span>
 
@@ -106,17 +171,19 @@ import { AuthService } from '../../services/auth.service';
                         </div>
 
 
+
                         <!-- Contraseña -->
+
                         <div class="campo">
 
                             <label for="password">
                                 Contraseña
                             </label>
 
-                            <div class="input-contenedor">
+                            <div class="input-wrapper">
 
-                <span class="input-icono">
-                  🔑
+                <span class="input-icon">
+                  🔒
                 </span>
 
                                 <input
@@ -135,53 +202,76 @@ import { AuthService } from '../../services/auth.service';
                         </div>
 
 
+
                         <!-- Error -->
+
                         <div
                                 *ngIf="error"
                                 class="login-error"
                         >
-                            <span class="error-icono">!</span>
-                            <span>{{ error }}</span>
+
+              <span class="error-icon">
+                !
+              </span>
+
+                            <span>
+                {{ error }}
+              </span>
+
                         </div>
 
 
+
                         <!-- Botón -->
+
                         <button
                                 type="submit"
-                                [disabled]="cargando || !f.valid"
                                 class="btn-ingresar"
+                                [disabled]="cargando || !f.valid"
                         >
 
-              <span *ngIf="!cargando">
-                Ingresar al sistema
-              </span>
+                            <ng-container *ngIf="!cargando">
 
-                            <span
-                                    *ngIf="cargando"
-                                    class="cargando"
-                            >
-                <span class="spinner"></span>
-                Verificando...
-              </span>
+                <span>
+                  Ingresar al sistema
+                </span>
 
-                            <span
-                                    *ngIf="!cargando"
-                                    class="flecha"
-                            >
-                →
-              </span>
+                                <span class="flecha">
+                  →
+                </span>
+
+                            </ng-container>
+
+
+                            <ng-container *ngIf="cargando">
+
+                                <span class="spinner"></span>
+
+                                <span>
+                  Verificando...
+                </span>
+
+                            </ng-container>
 
                         </button>
 
                     </form>
 
 
+
+                    <!-- Separador -->
+
                     <div class="separador"></div>
 
 
-                    <div class="login-footer">
 
-                        <span class="candado">🔒</span>
+                    <!-- Seguridad -->
+
+                    <div class="seguridad">
+
+            <span class="seguridad-icon">
+              🛡️
+            </span>
 
                         <span>
               Acceso restringido a personal autorizado
@@ -189,30 +279,100 @@ import { AuthService } from '../../services/auth.service';
 
                     </div>
 
-                </div>
+                </section>
 
             </div>
 
 
-            <!-- Pie de página -->
-            <div class="copyright">
-                Sistema de Control de Acceso · Parque del Café
-            </div>
+
+            <!-- =====================================================
+                 PIE DE PÁGINA
+            ====================================================== -->
+
+            <footer>
+
+        <span>
+          ☕
+        </span>
+
+                Sistema de Control de Acceso
+
+                <span class="separador-footer">
+          ·
+        </span>
+
+                Parque del Café
+
+            </footer>
 
         </div>
     `,
 
+
     styles: [`
 
         /* =========================================================
-           CONTENEDOR PRINCIPAL
+           VARIABLES
         ========================================================= */
 
-        .login-fondo {
-            min-height: 100vh;
+        html,
+        body {
+            margin: 0;
+            padding: 0;
             width: 100%;
+            min-height: 100%;
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+        
+        
+        :host {
+            display: block;
+
+            position: fixed;
+            inset: 0;
+
+            width: 100vw;
+            height: 100vh;
+
+            z-index: 9999;
+
+            --verde-oscuro: #173d2b;
+            --verde: #2f6545;
+            --verde-claro: #668b58;
+
+            --cafe: #683719;
+            --cafe-claro: #9a542b;
+
+            --dorado: #cda85b;
+
+            --crema: #faf7ef;
+            --blanco: #ffffff;
+
+            --texto: #352b24;
+            --texto-suave: #756b63;
+
+            --borde: #e4ddd2;
+        }
+
+
+
+        /* =========================================================
+           PÁGINA
+        ========================================================= */
+
+        .login-page {
+
+            width: 100%;
+            height: 100%;
+            min-height: 100vh;
+            min-height: 100dvh;
+
             position: relative;
-            overflow: hidden;
+
+            overflow: auto;
 
             display: flex;
             align-items: center;
@@ -220,283 +380,590 @@ import { AuthService } from '../../services/auth.service';
 
             box-sizing: border-box;
 
-            padding: 40px 25px;
+            padding: 35px 25px 65px;
+
+            font-family:
+                    Arial,
+                    Helvetica,
+                    sans-serif;
+        }
+
+
+
+        /* =========================================================
+           IMAGEN DE FONDO
+        ========================================================= */
+
+        .fondo-imagen {
+            position: absolute;
+
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            background-image: url('/assets/fondo-parque.png');
+
+            background-size: cover;
+            background-position: center center;
+
+            z-index: 0;
+
+            transform: scale(1.02);
+
+            animation: zoom-fondo 18s ease-in-out infinite alternate;
+        }
+
+
+        @keyframes zoom-fondo {
+
+            from {
+                transform: scale(1.03);
+            }
+
+            to {
+                transform: scale(1.08);
+            }
+
+        }
+
+
+
+        /* =========================================================
+           CAPA OSCURA
+        ========================================================= */
+
+        .fondo-overlay {
+            position: absolute;
+
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            z-index: 1;
 
             background:
-                    radial-gradient(
-                            circle at 15% 20%,
-                            rgba(207, 166, 86, 0.18),
-                            transparent 30%
-                    ),
-                    radial-gradient(
-                            circle at 85% 80%,
-                            rgba(166, 67, 47, 0.22),
-                            transparent 35%
-                    ),
                     linear-gradient(
-                            135deg,
-                            #32130e 0%,
-                            var(--pdc-cafe-rojo) 45%,
-                            var(--pdc-cafe-medio) 100%
+                            90deg,
+                            rgba(18, 55, 35, 0.78) 0%,
+                            rgba(25, 65, 42, 0.58) 40%,
+                            rgba(15, 40, 27, 0.30) 100%
                     );
         }
 
 
+
         /* =========================================================
-           CÍRCULOS DECORATIVOS
+           DECORACIONES
         ========================================================= */
 
-        .circulo {
+        .hoja {
+
             position: absolute;
-            border-radius: 50%;
+
+            z-index: 1;
+
+            opacity: 0.15;
+
             pointer-events: none;
 
-            filter: blur(1px);
+            filter: blur(0.5px);
 
-            animation: flotar 8s ease-in-out infinite;
         }
 
-        .circulo-1 {
-            width: 420px;
-            height: 420px;
 
-            top: -220px;
-            left: -180px;
+        .hoja-1 {
 
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(255,255,255,0.025);
+            font-size: 150px;
+
+            right: -30px;
+            top: -25px;
+
+            transform: rotate(-25deg);
+
+            animation:
+                    flotar 7s ease-in-out infinite;
+
         }
 
-        .circulo-2 {
-            width: 300px;
-            height: 300px;
 
-            right: -130px;
-            bottom: -100px;
+        .hoja-2 {
 
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(255,255,255,0.025);
+            font-size: 110px;
 
-            animation-delay: -3s;
-        }
+            left: -25px;
+            bottom: 30px;
 
-        .circulo-3 {
-            width: 160px;
-            height: 160px;
+            transform: rotate(25deg);
 
-            right: 15%;
-            top: 10%;
+            animation:
+                    flotar 9s ease-in-out infinite reverse;
 
-            border: 1px solid rgba(255,255,255,0.06);
-
-            animation-delay: -5s;
         }
 
 
         @keyframes flotar {
 
             0%, 100% {
-                transform: translateY(0) rotate(0deg);
+                transform:
+                        translateY(0)
+                        rotate(-20deg);
             }
 
             50% {
-                transform: translateY(-18px) rotate(5deg);
+                transform:
+                        translateY(-15px)
+                        rotate(-10deg);
             }
 
         }
+
 
 
         /* =========================================================
-           CONTENEDOR
+           GRANOS
         ========================================================= */
 
-        .login-contenedor {
-            position: relative;
-            z-index: 2;
+        .grano {
 
-            width: 100%;
-            max-width: 1050px;
+            position: absolute;
 
-            display: grid;
-            grid-template-columns: 1fr 430px;
+            z-index: 1;
 
-            border-radius: 26px;
+            width: 16px;
+            height: 23px;
 
-            overflow: hidden;
-
-            background: rgba(255,255,255,0.08);
-
-            border: 1px solid rgba(255,255,255,0.18);
-
-            box-shadow:
-                    0 35px 80px rgba(0,0,0,0.38),
-                    0 10px 25px rgba(0,0,0,0.15);
-
-            backdrop-filter: blur(14px);
-
-            animation: aparecer 0.8s ease-out;
-        }
-
-
-        @keyframes aparecer {
-
-            from {
-                opacity: 0;
-                transform: translateY(25px) scale(0.98);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-
-        }
-
-
-        /* =========================================================
-           PANEL IZQUIERDO
-        ========================================================= */
-
-        .panel-informacion {
-            min-height: 560px;
-
-            padding: 45px;
-
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-
-            box-sizing: border-box;
+            border-radius: 50%;
 
             background:
                     linear-gradient(
-                            145deg,
-                            rgba(47, 19, 14, 0.72),
-                            rgba(117, 48, 35, 0.55)
+                            135deg,
+                            #4b2412,
+                            #9b572d
                     );
+
+            opacity: 0.35;
+
+            transform: rotate(35deg);
+
         }
 
 
-        .marca img {
-            width: 170px;
-            height: auto;
+        .grano::after {
 
-            background: white;
+            content: '';
 
-            border-radius: 10px;
+            position: absolute;
 
-            padding: 8px 12px;
+            width: 2px;
+
+            height: 17px;
+
+            background: rgba(255,255,255,0.25);
+
+            left: 7px;
+            top: 3px;
+
+            border-radius: 50%;
+
+        }
+
+
+        .grano-1 {
+
+            left: 8%;
+            top: 15%;
+
+            animation:
+                    flotar-grano 6s infinite ease-in-out;
+
+        }
+
+
+        .grano-2 {
+
+            left: 42%;
+            bottom: 10%;
+
+            transform: rotate(-25deg) scale(0.8);
+
+            animation:
+                    flotar-grano 8s infinite ease-in-out;
+
+        }
+
+
+        .grano-3 {
+
+            right: 8%;
+            top: 20%;
+
+            transform:
+                    rotate(45deg)
+                    scale(0.7);
+
+            animation:
+                    flotar-grano 7s infinite ease-in-out;
+
+        }
+
+
+        @keyframes flotar-grano {
+
+            0%, 100% {
+                transform:
+                        translateY(0)
+                        rotate(35deg);
+            }
+
+            50% {
+                transform:
+                        translateY(-18px)
+                        rotate(50deg);
+            }
+
+        }
+
+
+
+        /* =========================================================
+           CONTENIDO
+        ========================================================= */
+
+        .contenido {
+
+            width: 100%;
+
+            max-width: 1100px;
+
+            position: relative;
+
+            z-index: 2;
+
+            display: grid;
+
+            grid-template-columns:
+        minmax(0, 1fr)
+        minmax(360px, 430px);
+
+            gap: 65px;
+
+            align-items: center;
+
+        }
+
+
+
+        /* =========================================================
+           PRESENTACIÓN
+        ========================================================= */
+
+        .presentacion {
+
+            min-height: 520px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: space-between;
+
+            padding: 25px 0;
 
             box-sizing: border-box;
 
-            box-shadow:
-                    0 8px 20px rgba(0,0,0,0.15);
+            animation:
+                    aparecer-izquierda 0.8s ease-out;
+
         }
 
 
-        .informacion-centro {
-            max-width: 430px;
-
-            animation: aparecerTexto 1s ease-out 0.2s both;
-        }
-
-
-        @keyframes aparecerTexto {
+        @keyframes aparecer-izquierda {
 
             from {
+
                 opacity: 0;
-                transform: translateX(-20px);
+
+                transform:
+                        translateX(-35px);
+
             }
 
             to {
+
                 opacity: 1;
-                transform: translateX(0);
+
+                transform:
+                        translateX(0);
+
             }
+
+        }
+
+
+
+        /* =========================================================
+           LOGO
+        ========================================================= */
+
+        .logo-contenedor {
+
+            width: fit-content;
+
+            background: rgba(255,255,255,0.95);
+
+            padding: 9px 13px;
+
+            border-radius: 10px;
+
+            box-shadow:
+                    0 8px 25px rgba(0,0,0,0.16);
+
+        }
+
+
+        .logo {
+
+            display: block;
+
+            width: 175px;
+
+            height: auto;
+
+        }
+
+
+
+        /* =========================================================
+           TEXTO
+        ========================================================= */
+
+        .texto-presentacion {
+
+            max-width: 540px;
 
         }
 
 
         .etiqueta {
+
             display: inline-block;
 
-            color: #e5c36e;
+            color: #e4c66f;
 
             font-size: 11px;
 
             font-weight: 700;
 
-            letter-spacing: 2px;
+            letter-spacing: 2.5px;
 
-            margin-bottom: 15px;
+            margin-bottom: 14px;
+
         }
 
 
-        .informacion-centro h1 {
+        .texto-presentacion h1 {
+
             margin: 0;
 
             color: white;
 
-            font-size: 52px;
+            font-size: clamp(42px, 5vw, 64px);
 
-            line-height: 1.05;
+            line-height: 1;
+
+            letter-spacing: -2px;
 
             font-weight: 700;
 
-            letter-spacing: -1.5px;
         }
 
 
-        .informacion-centro h1 span {
-            color: #e3bd63;
+        .texto-presentacion h1 strong {
+
+            display: block;
+
+            color: #d8b866;
+
+            font-weight: 700;
+
         }
 
 
-        .informacion-centro p {
+        .texto-presentacion p {
+
+            max-width: 440px;
+
             margin: 25px 0 0;
 
-            color: rgba(255,255,255,0.72);
+            color: rgba(255,255,255,0.82);
 
             font-size: 15px;
 
             line-height: 1.7;
 
-            max-width: 390px;
         }
 
 
-        .linea-decorativa {
-            width: 65px;
-            height: 3px;
+
+        /* =========================================================
+           DECORACIÓN
+        ========================================================= */
+
+        .decoracion {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            width: 140px;
+
+            margin-top: 25px;
+
+        }
+
+
+        .decoracion span {
+
+            height: 1px;
+
+            flex: 1;
+
+            background:
+                    rgba(220,190,105,0.65);
+
+        }
+
+
+        .decoracion b {
+
+            color: #e1bd62;
+
+            font-size: 17px;
+
+            font-weight: normal;
+
+        }
+
+
+
+        /* =========================================================
+           UBICACIÓN
+        ========================================================= */
+
+        .ubicacion {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
 
             margin-top: 28px;
 
+        }
+
+
+        .ubicacion-icono {
+
+            width: 38px;
+            height: 38px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
             border-radius: 10px;
 
-            background: #d5ad55;
+            background:
+                    rgba(255,255,255,0.12);
+
+            border:
+                    1px solid rgba(255,255,255,0.15);
+
+            font-size: 16px;
+
         }
 
 
-        .informacion-pie {
+        .ubicacion strong {
+
+            display: block;
+
+            color: white;
+
+            font-size: 13px;
+
+        }
+
+
+        .ubicacion small {
+
+            display: block;
+
+            margin-top: 3px;
+
+            color: rgba(255,255,255,0.62);
+
+            font-size: 11px;
+
+        }
+
+
+
+        /* =========================================================
+           ESTADO
+        ========================================================= */
+
+        .estado-sistema {
+
             display: flex;
+
             align-items: center;
+
             gap: 8px;
 
-            color: rgba(255,255,255,0.55);
+            color: rgba(255,255,255,0.65);
 
-            font-size: 12px;
+            font-size: 11px;
+
         }
 
 
-        .punto {
+        .estado-punto {
+
             width: 7px;
             height: 7px;
 
             border-radius: 50%;
 
-            background: #67c587;
+            background: #65c784;
 
-            box-shadow: 0 0 10px rgba(103,197,135,0.7);
+            box-shadow:
+                    0 0 12px #65c784;
+
+            animation:
+                    pulso 2s infinite;
+
         }
+
+
+        @keyframes pulso {
+
+            0%, 100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+
+        }
+
 
 
         /* =========================================================
@@ -504,32 +971,84 @@ import { AuthService } from '../../services/auth.service';
         ========================================================= */
 
         .login-card {
-            background: var(--pdc-crema-carta);
 
-            padding: 50px 42px;
-
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            width: 100%;
 
             box-sizing: border-box;
+
+            padding: 45px 40px;
+
+            border-radius: 24px;
+
+            background:
+                    rgba(250,247,239,0.97);
+
+            box-shadow:
+
+                    0 30px 70px
+                    rgba(0,0,0,0.30),
+
+                    0 10px 25px
+                    rgba(0,0,0,0.12);
+
+            border:
+                    1px solid rgba(255,255,255,0.6);
+
+            animation:
+                    aparecer-derecha 0.8s ease-out;
+
         }
 
 
+        @keyframes aparecer-derecha {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                        translateX(35px)
+                        scale(0.98);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                        translateX(0)
+                        scale(1);
+
+            }
+
+        }
+
+
+
+        /* =========================================================
+           HEADER LOGIN
+        ========================================================= */
+
         .login-header {
+
             text-align: center;
 
-            margin-bottom: 34px;
+            margin-bottom: 32px;
+
         }
 
 
         .icono-login {
+
             width: 62px;
             height: 62px;
 
-            margin: 0 auto 18px;
+            margin:
+                    0 auto 17px;
 
             display: flex;
+
             align-items: center;
             justify-content: center;
 
@@ -537,24 +1056,26 @@ import { AuthService } from '../../services/auth.service';
 
             background:
                     linear-gradient(
-                            145deg,
-                            var(--pdc-cafe-rojo),
-                            var(--pdc-terracota)
+                            135deg,
+                            var(--cafe),
+                            var(--cafe-claro)
                     );
 
-            box-shadow:
-                    0 10px 22px rgba(116,48,35,0.25);
+            color: white;
 
-            animation: pulso 3s ease-in-out infinite;
-        }
-
-
-        .icono-login span {
             font-size: 27px;
+
+            box-shadow:
+                    0 10px 22px
+                    rgba(104,55,25,0.25);
+
+            animation:
+                    icono-flotar 3s ease-in-out infinite;
+
         }
 
 
-        @keyframes pulso {
+        @keyframes icono-flotar {
 
             0%, 100% {
                 transform: translateY(0);
@@ -568,23 +1089,29 @@ import { AuthService } from '../../services/auth.service';
 
 
         .login-header h2 {
+
             margin: 0;
 
-            color: var(--pdc-cafe-rojo);
+            color: var(--cafe);
 
             font-size: 27px;
 
             font-weight: 700;
+
         }
 
 
         .login-header p {
-            margin: 8px 0 0;
 
-            color: var(--pdc-texto-suave);
+            margin:
+                    8px 0 0;
+
+            color: var(--texto-suave);
 
             font-size: 13px;
+
         }
+
 
 
         /* =========================================================
@@ -592,97 +1119,126 @@ import { AuthService } from '../../services/auth.service';
         ========================================================= */
 
         .campo {
-            margin-bottom: 20px;
+
+            margin-bottom: 19px;
+
         }
 
 
         .campo label {
+
             display: block;
 
             margin-bottom: 8px;
 
-            color: var(--pdc-texto);
+            color: var(--texto);
 
             font-size: 13px;
 
             font-weight: 700;
+
         }
 
 
-        .input-contenedor {
+        .input-wrapper {
+
             position: relative;
+
         }
 
 
-        .input-icono {
+        .input-icon {
+
             position: absolute;
 
             left: 14px;
+
             top: 50%;
 
-            transform: translateY(-50%);
+            transform:
+                    translateY(-50%);
 
-            font-size: 16px;
+            font-size: 15px;
 
-            opacity: 0.65;
+            opacity: 0.55;
 
             z-index: 1;
+
         }
 
 
         .campo input {
+
             width: 100%;
 
-            height: 48px;
-
-            padding: 0 14px 0 45px;
+            height: 49px;
 
             box-sizing: border-box;
 
-            border: 1px solid var(--pdc-borde);
+            padding:
+                    0 14px 0 43px;
+
+            border:
+                    1px solid var(--borde);
 
             border-radius: 11px;
 
-            background: #fff;
+            background: white;
 
-            color: var(--pdc-texto);
+            color: var(--texto);
 
             font-size: 14px;
 
             transition:
-                    border-color 0.2s ease,
+                    border 0.2s ease,
                     box-shadow 0.2s ease,
                     transform 0.2s ease;
+
         }
 
 
         .campo input::placeholder {
+
             color: #aaa;
+
         }
 
 
         .campo input:hover:not(:disabled) {
-            border-color: #c9bcae;
+
+            border-color:
+                    #c8bcae;
+
         }
 
 
         .campo input:focus {
+
             outline: none;
 
-            border-color: var(--pdc-cafe-rojo);
+            border-color:
+                    var(--verde);
 
             box-shadow:
-                    0 0 0 4px rgba(116,48,35,0.09);
+                    0 0 0 4px
+                    rgba(47,101,69,0.10);
 
-            transform: translateY(-1px);
+            transform:
+                    translateY(-1px);
+
         }
 
 
         .campo input:disabled {
-            background: #f5f3f0;
 
-            cursor: not-allowed;
+            background:
+                    #f1eee8;
+
+            cursor:
+                    not-allowed;
+
         }
+
 
 
         /* =========================================================
@@ -690,54 +1246,77 @@ import { AuthService } from '../../services/auth.service';
         ========================================================= */
 
         .login-error {
+
             display: flex;
+
             align-items: center;
+
             gap: 9px;
 
-            padding: 11px 12px;
+            padding:
+                    11px 12px;
 
-            margin-bottom: 17px;
+            margin:
+                    0 0 17px;
 
             border-radius: 9px;
 
-            background: rgba(180, 50, 50, 0.08);
+            background:
+                    rgba(177,55,45,0.08);
 
-            border: 1px solid rgba(180, 50, 50, 0.15);
+            border:
+                    1px solid rgba(177,55,45,0.16);
 
-            color: var(--pdc-rojo-cereza);
+            color:
+                    #a52f27;
 
             font-size: 12px;
 
-            animation: errorEntrada 0.3s ease-out;
+            animation:
+                    aparecer-error 0.3s ease-out;
+
         }
 
 
-        @keyframes errorEntrada {
+        @keyframes aparecer-error {
 
             from {
+
                 opacity: 0;
-                transform: translateY(-5px);
+
+                transform:
+                        translateY(-5px);
+
             }
 
             to {
+
                 opacity: 1;
-                transform: translateY(0);
+
+                transform:
+                        translateY(0);
+
             }
 
         }
 
 
-        .error-icono {
+        .error-icon {
+
             width: 19px;
             height: 19px;
 
             display: flex;
+
             align-items: center;
             justify-content: center;
 
+            flex-shrink: 0;
+
             border-radius: 50%;
 
-            background: var(--pdc-rojo-cereza);
+            background:
+                    #a52f27;
 
             color: white;
 
@@ -745,8 +1324,8 @@ import { AuthService } from '../../services/auth.service';
 
             font-weight: bold;
 
-            flex-shrink: 0;
         }
+
 
 
         /* =========================================================
@@ -754,15 +1333,18 @@ import { AuthService } from '../../services/auth.service';
         ========================================================= */
 
         .btn-ingresar {
+
+            position: relative;
+
             width: 100%;
 
             height: 50px;
 
             display: flex;
-            align-items: center;
-            justify-content: center;
 
-            position: relative;
+            align-items: center;
+
+            justify-content: center;
 
             border: none;
 
@@ -771,8 +1353,8 @@ import { AuthService } from '../../services/auth.service';
             background:
                     linear-gradient(
                             135deg,
-                            var(--pdc-cafe-rojo),
-                            var(--pdc-terracota)
+                            var(--cafe),
+                            var(--cafe-claro)
                     );
 
             color: white;
@@ -784,232 +1366,496 @@ import { AuthService } from '../../services/auth.service';
             cursor: pointer;
 
             box-shadow:
-                    0 8px 18px rgba(116,48,35,0.22);
+                    0 9px 20px
+                    rgba(104,55,25,0.22);
 
             transition:
                     transform 0.2s ease,
-                    box-shadow 0.2s ease,
-                    opacity 0.2s ease;
+                    box-shadow 0.2s ease;
+
         }
 
 
         .btn-ingresar:hover:not(:disabled) {
-            transform: translateY(-2px);
+
+            transform:
+                    translateY(-2px);
 
             box-shadow:
-                    0 12px 25px rgba(116,48,35,0.32);
+                    0 13px 27px
+                    rgba(104,55,25,0.30);
+
         }
 
 
         .btn-ingresar:active:not(:disabled) {
-            transform: translateY(0);
+
+            transform:
+                    translateY(0);
+
         }
 
 
         .btn-ingresar:disabled {
+
             opacity: 0.6;
 
-            cursor: not-allowed;
+            cursor:
+                    not-allowed;
 
             box-shadow: none;
+
         }
 
 
         .flecha {
+
             position: absolute;
 
-            right: 18px;
+            right: 17px;
 
             font-size: 20px;
 
-            transition: transform 0.2s ease;
+            transition:
+                    transform 0.2s ease;
+
         }
 
 
-        .btn-ingresar:hover:not(:disabled) .flecha {
-            transform: translateX(4px);
+        .btn-ingresar:hover:not(:disabled)
+        .flecha {
+
+            transform:
+                    translateX(4px);
+
         }
+
 
 
         /* =========================================================
            SPINNER
         ========================================================= */
 
-        .cargando {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-        }
-
-
         .spinner {
+
             width: 16px;
             height: 16px;
 
-            border: 2px solid rgba(255,255,255,0.35);
+            margin-right: 9px;
 
-            border-top-color: white;
+            border:
+                    2px solid
+                    rgba(255,255,255,0.35);
+
+            border-top-color:
+                    white;
 
             border-radius: 50%;
 
-            animation: girar 0.7s linear infinite;
+            animation:
+                    girar 0.7s linear infinite;
+
         }
 
 
         @keyframes girar {
 
             to {
-                transform: rotate(360deg);
+                transform:
+                        rotate(360deg);
             }
 
         }
 
 
+
         /* =========================================================
-           FOOTER LOGIN
+           SEGURIDAD
         ========================================================= */
 
         .separador {
+
             width: 100%;
 
             height: 1px;
 
-            margin: 28px 0 18px;
+            margin:
+                    27px 0 17px;
 
-            background: var(--pdc-borde);
+            background:
+                    var(--borde);
+
         }
 
 
-        .login-footer {
+        .seguridad {
+
             display: flex;
+
             justify-content: center;
+
             align-items: center;
+
             gap: 7px;
 
-            color: var(--pdc-texto-suave);
+            color:
+                    var(--texto-suave);
 
             font-size: 10px;
 
             text-align: center;
+
         }
 
 
-        .candado {
-            font-size: 11px;
+        .seguridad-icon {
+
+            font-size: 12px;
+
         }
+
 
 
         /* =========================================================
-           COPYRIGHT
+           FOOTER
         ========================================================= */
 
-        .copyright {
+        footer {
+
             position: absolute;
 
-            bottom: 14px;
+            bottom: 17px;
 
             left: 0;
             right: 0;
 
+            z-index: 3;
+
             text-align: center;
 
-            color: rgba(255,255,255,0.42);
+            color:
+                    rgba(255,255,255,0.55);
 
             font-size: 10px;
 
-            z-index: 3;
         }
 
 
+        footer span:first-child {
+
+            margin-right: 4px;
+
+        }
+
+
+        .separador-footer {
+
+            margin:
+                    0 5px;
+
+        }
+
+
+
         /* =========================================================
-           TABLET / PANTALLAS MEDIANAS
+           TABLETS
         ========================================================= */
 
-        @media (max-width: 850px) {
+        @media (max-width: 900px) {
 
-            .login-contenedor {
-                max-width: 500px;
+            .login-page {
+
+                padding:
+                        25px 20px 55px;
+
+            }
+
+
+            .contenido {
+
+                max-width: 620px;
 
                 grid-template-columns: 1fr;
+
+                gap: 25px;
+
             }
 
 
-            .panel-informacion {
+            .presentacion {
+
                 min-height: auto;
 
-                padding: 30px 35px;
+                padding:
+                        5px 0;
 
-                gap: 35px;
+                align-items: center;
+
+                text-align: center;
+
             }
 
 
-            .informacion-centro h1 {
-                font-size: 40px;
+            .texto-presentacion {
+
+                max-width: 600px;
+
             }
 
 
-            .informacion-centro p {
-                margin-top: 15px;
+            .texto-presentacion h1 {
+
+                font-size: 42px;
+
+            }
+
+
+            .texto-presentacion h1 strong {
+
+                display: inline;
+
+                margin-left: 8px;
+
+            }
+
+
+            .texto-presentacion p {
+
+                margin:
+                        15px auto 0;
+
+            }
+
+
+            .decoracion {
+
+                margin:
+                        20px auto 0;
+
+            }
+
+
+            .ubicacion {
+
+                justify-content: center;
+
+                margin-top: 18px;
+
+            }
+
+
+            .estado-sistema {
+
+                display: none;
+
             }
 
 
             .login-card {
-                padding: 38px 35px;
+
+                max-width: 430px;
+
+                margin:
+                        0 auto;
+
             }
 
         }
 
 
+
         /* =========================================================
-           CELULARES
+           TABLET PEQUEÑA / CELULAR
         ========================================================= */
 
-        @media (max-width: 520px) {
+        @media (max-width: 600px) {
 
-            .login-fondo {
-                padding: 20px 14px;
+            .login-page {
+
+                align-items: flex-start;
+
+                padding:
+                        20px 14px 45px;
+
             }
 
 
-            .login-contenedor {
-                border-radius: 20px;
+            .contenido {
+
+                width: 100%;
+
             }
 
 
-            .panel-informacion {
-                padding: 25px;
+            .presentacion {
 
-                gap: 25px;
+                padding: 0;
+
+                gap: 20px;
+
             }
 
 
-            .marca img {
+            .logo {
+
                 width: 145px;
+
             }
 
 
-            .informacion-centro h1 {
+            .texto-presentacion h1 {
+
                 font-size: 34px;
+
+                letter-spacing: -1px;
+
             }
 
 
-            .informacion-centro p {
+            .texto-presentacion p {
+
                 font-size: 13px;
+
+                line-height: 1.5;
+
+            }
+
+
+            .ubicacion {
+
+                margin-top: 15px;
+
             }
 
 
             .login-card {
-                padding: 35px 25px;
+
+                padding:
+                        32px 24px;
+
+                border-radius: 20px;
+
             }
 
 
             .login-header {
-                margin-bottom: 28px;
+
+                margin-bottom: 27px;
+
             }
 
 
-            .copyright {
+            .icono-login {
+
+                width: 55px;
+                height: 55px;
+
+                font-size: 24px;
+
+            }
+
+
+            .login-header h2 {
+
+                font-size: 24px;
+
+            }
+
+
+            .campo input {
+
+                height: 50px;
+
+            }
+
+
+            .btn-ingresar {
+
+                height: 51px;
+
+            }
+
+
+            footer {
+
                 display: none;
+
+            }
+
+        }
+
+
+
+        /* =========================================================
+           CELULARES MUY PEQUEÑOS
+        ========================================================= */
+
+        @media (max-width: 380px) {
+
+            .login-page {
+
+                padding:
+                        15px 10px 25px;
+
+            }
+
+
+            .logo {
+
+                width: 125px;
+
+            }
+
+
+            .texto-presentacion h1 {
+
+                font-size: 30px;
+
+            }
+
+
+            .texto-presentacion p {
+
+                font-size: 12px;
+
+            }
+
+
+            .login-card {
+
+                padding:
+                        27px 19px;
+
+            }
+
+
+            .login-header {
+
+                margin-bottom: 23px;
+
+            }
+
+        }
+
+
+
+        /* =========================================================
+           PANTALLAS ALTAS
+        ========================================================= */
+
+        @media (min-height: 800px) and (min-width: 901px) {
+
+            .login-page {
+
+                padding-bottom: 55px;
+
+            }
+
+
+            .presentacion {
+
+                min-height: 570px;
+
             }
 
         }
@@ -1024,6 +1870,7 @@ export class LoginComponent {
     cargando = false;
     error = '';
 
+
     constructor(
         private authService: AuthService,
         private router: Router
@@ -1033,31 +1880,34 @@ export class LoginComponent {
     ingresar(): void {
 
         this.cargando = true;
+
         this.error = '';
 
-        this.authService.login(this.username, this.password).subscribe({
+        this.authService
+            .login(this.username, this.password)
+            .subscribe({
 
-            next: (sesion) => {
+                next: (sesion) => {
 
-                this.cargando = false;
+                    this.cargando = false;
 
-                this.router.navigate([
-                    this.authService.rutaInicioSegunRol()
-                ]);
+                    this.router.navigate([
+                        this.authService.rutaInicioSegunRol()
+                    ]);
 
-            },
+                },
 
-            error: (err) => {
+                error: (err) => {
 
-                this.cargando = false;
+                    this.cargando = false;
 
-                this.error =
-                    err.error?.message ||
-                    'Usuario o contraseña incorrectos.';
+                    this.error =
+                        err.error?.message ||
+                        'Usuario o contraseña incorrectos.';
 
-            }
+                }
 
-        });
+            });
 
     }
 

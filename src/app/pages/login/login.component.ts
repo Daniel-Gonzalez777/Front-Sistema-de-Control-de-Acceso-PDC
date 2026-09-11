@@ -23,9 +23,17 @@ import { AuthService } from '../../services/auth.service';
                 <div class="fondo-imagen"></div>
                 <div class="fondo-overlay"></div>
 
-                <!-- Decoraciones -->
-                <div class="hoja hoja-1">🍃</div>
-                <div class="hoja hoja-2">🌿</div>
+                <!-- Decoraciones: hojas de línea, no emojis -->
+                <svg class="hoja hoja-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+                    <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+                    <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+                </svg>
+
+                <svg class="hoja hoja-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+                    <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+                    <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+                </svg>
+
                 <div class="grano grano-1"></div>
                 <div class="grano grano-2"></div>
                 <div class="grano grano-3"></div>
@@ -75,25 +83,18 @@ import { AuthService } from '../../services/auth.service';
 
                         <div class="decoracion">
                             <span></span>
-                            <b>☕</b>
+
+                            <svg class="icono-taza-mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                                <path d="M17 8h1a4 4 0 0 1 0 8h-1"/>
+                                <path d="M3 8h14v7a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8Z"/>
+                                <path d="M6 2c0 1-1 1-1 2s1 1 1 2"/>
+                                <path d="M10 2c0 1-1 1-1 2s1 1 1 2"/>
+                            </svg>
+
                             <span></span>
                         </div>
 
-
-                        <div class="ubicacion">
-
-                            <div class="ubicacion-icono">
-                                📍
-                            </div>
-
-                            <div>
-                                <strong>Montenegro, Quindío</strong>
-                                <small>
-                                    Corazón del Eje Cafetero
-                                </small>
-                            </div>
-
-                        </div>
+                        
 
                     </div>
 
@@ -122,7 +123,12 @@ import { AuthService } from '../../services/auth.service';
                     <div class="login-header">
 
                         <div class="icono-login">
-                            ☕
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                                <path d="M17 8h1a4 4 0 0 1 0 8h-1"/>
+                                <path d="M3 8h14v7a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8Z"/>
+                                <path d="M6 2c0 1-1 1-1 2s1 1 1 2"/>
+                                <path d="M10 2c0 1-1 1-1 2s1 1 1 2"/>
+                            </svg>
                         </div>
 
                         <h2>
@@ -156,9 +162,10 @@ import { AuthService } from '../../services/auth.service';
 
                             <div class="input-wrapper">
 
-                <span class="input-icon">
-                  👤
-                </span>
+                                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <circle cx="12" cy="7" r="4"/>
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                </svg>
 
                                 <input
                                         id="username"
@@ -188,13 +195,14 @@ import { AuthService } from '../../services/auth.service';
 
                             <div class="input-wrapper">
 
-                <span class="input-icon">
-                  🔒
-                </span>
+                                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <rect x="3" y="11" width="18" height="11" rx="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
 
                                 <input
                                         id="password"
-                                        type="password"
+                                        [type]="verContrasena ? 'text' : 'password'"
                                         name="password"
                                         [(ngModel)]="password"
                                         required
@@ -202,6 +210,23 @@ import { AuthService } from '../../services/auth.service';
                                         autocomplete="current-password"
                                         placeholder="Ingresa tu contraseña"
                                 >
+
+                                <button
+                                        type="button"
+                                        class="boton-ver-contrasena"
+                                        (click)="verContrasena = !verContrasena"
+                                        [attr.aria-label]="verContrasena ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+                                        tabindex="-1"
+                                >
+                                    <svg *ngIf="!verContrasena" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                    <svg *ngIf="verContrasena" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                                        <line x1="1" y1="1" x2="23" y2="23"/>
+                                    </svg>
+                                </button>
 
                             </div>
 
@@ -275,9 +300,10 @@ import { AuthService } from '../../services/auth.service';
 
                     <div class="seguridad">
 
-            <span class="seguridad-icon">
-              🛡️
-            </span>
+                        <svg class="seguridad-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/>
+                            <path d="m9 12 2 2 4-4"/>
+                        </svg>
 
                         <span>
               Acceso restringido a personal autorizado
@@ -297,9 +323,10 @@ import { AuthService } from '../../services/auth.service';
 
             <footer>
 
-        <span>
-          ☕
-        </span>
+                <svg class="footer-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                    <path d="M17 8h1a4 4 0 0 1 0 8h-1"/>
+                    <path d="M3 8h14v7a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8Z"/>
+                </svg>
 
                 Sistema de Control de Acceso
 
@@ -327,7 +354,7 @@ import { AuthService } from '../../services/auth.service';
             padding: 0;
             width: 100%;
             min-height: 100%;
-            overflow-x: hidden; /* en los dos niveles: html Y body */
+            overflow-x: hidden;
         }
 
 
@@ -337,11 +364,6 @@ import { AuthService } from '../../services/auth.service';
             position: fixed;
             inset: 0;
 
-            /* "inset: 0" ya estira el elemento exactamente al tamaño del
-               viewport -- no hace falta (ni conviene) repetirlo con
-               100vw/100vh, porque 100vw cuenta el ancho de la barra de
-               scroll del sistema y puede generar un scroll horizontal
-               fantasma de unos pocos píxeles. Con 100% basta. */
             width: 100%;
             height: 100%;
 
@@ -382,9 +404,6 @@ import { AuthService } from '../../services/auth.service';
 
             position: relative;
 
-            /* Scroll solo si el CONTENIDO real (no el fondo) no cabe en
-               pantallas muy bajitas -- el fondo ya no puede provocar
-               este scroll porque queda recortado en su propio contenedor. */
             overflow-y: auto;
             overflow-x: hidden;
 
@@ -405,8 +424,7 @@ import { AuthService } from '../../services/auth.service';
 
 
         /* =========================================================
-           CONTENEDOR DEL FONDO (recorta el zoom y las decoraciones
-           para que nunca se salgan de la pantalla)
+           CONTENEDOR DEL FONDO
         ========================================================= */
 
         .fondo-contenedor {
@@ -459,9 +477,6 @@ import { AuthService } from '../../services/auth.service';
             }
 
             to {
-                /* Antes llegaba a 1.08; con el contenedor recortando de
-                   todas formas, se deja así pero YA no genera scroll,
-                   solo queda oculto el excedente. */
                 transform: scale(1.08);
             }
 
@@ -495,30 +510,33 @@ import { AuthService } from '../../services/auth.service';
 
 
         /* =========================================================
-           DECORACIONES
+           DECORACIONES (íconos SVG de línea, no emojis)
         ========================================================= */
 
         .hoja {
 
             position: absolute;
 
+            width: 130px;
+            height: 130px;
+
             z-index: 2;
 
-            opacity: 0.15;
+            opacity: 0.16;
+
+            color: var(--dorado);
 
             pointer-events: none;
 
-            filter: blur(0.5px);
+            filter: blur(0.3px);
 
         }
 
 
         .hoja-1 {
 
-            font-size: 150px;
-
-            right: -30px;
-            top: -25px;
+            right: -20px;
+            top: -15px;
 
             transform: rotate(-25deg);
 
@@ -530,12 +548,13 @@ import { AuthService } from '../../services/auth.service';
 
         .hoja-2 {
 
-            font-size: 110px;
+            width: 95px;
+            height: 95px;
 
-            left: -25px;
+            left: -15px;
             bottom: 30px;
 
-            transform: rotate(25deg);
+            transform: rotate(150deg);
 
             animation:
                     flotar 9s ease-in-out infinite reverse;
@@ -562,7 +581,7 @@ import { AuthService } from '../../services/auth.service';
 
 
         /* =========================================================
-           GRANOS
+           GRANOS (silueta CSS, ya tenían buen estilo propio)
         ========================================================= */
 
         .grano {
@@ -848,7 +867,7 @@ import { AuthService } from '../../services/auth.service';
 
 
         /* =========================================================
-           DECORACIÓN
+           DECORACIÓN (línea + taza + línea)
         ========================================================= */
 
         .decoracion {
@@ -878,13 +897,14 @@ import { AuthService } from '../../services/auth.service';
         }
 
 
-        .decoracion b {
+        .icono-taza-mini {
+
+            width: 18px;
+            height: 18px;
 
             color: #e1bd62;
 
-            font-size: 17px;
-
-            font-weight: normal;
+            flex-shrink: 0;
 
         }
 
@@ -925,7 +945,17 @@ import { AuthService } from '../../services/auth.service';
             border:
                     1px solid rgba(255,255,255,0.15);
 
-            font-size: 16px;
+            color: #e57a6a;
+
+            flex-shrink: 0;
+
+        }
+
+
+        .ubicacion-icono svg {
+
+            width: 18px;
+            height: 18px;
 
         }
 
@@ -1103,14 +1133,20 @@ import { AuthService } from '../../services/auth.service';
 
             color: white;
 
-            font-size: 27px;
-
             box-shadow:
                     0 10px 22px
                     rgba(104,55,25,0.25);
 
             animation:
                     icono-flotar 3s ease-in-out infinite;
+
+        }
+
+
+        .icono-login svg {
+
+            width: 28px;
+            height: 28px;
 
         }
 
@@ -1198,11 +1234,66 @@ import { AuthService } from '../../services/auth.service';
             transform:
                     translateY(-50%);
 
-            font-size: 15px;
+            width: 17px;
+            height: 17px;
 
-            opacity: 0.55;
+            color: var(--texto-suave);
+
+            opacity: 0.7;
 
             z-index: 1;
+
+            pointer-events: none;
+
+        }
+
+
+        .boton-ver-contrasena {
+
+            position: absolute;
+
+            right: 6px;
+
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            width: 34px;
+            height: 34px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background: none;
+
+            border: none;
+
+            border-radius: 8px;
+
+            color: var(--texto-suave);
+
+            cursor: pointer;
+
+            z-index: 1;
+
+        }
+
+
+        .boton-ver-contrasena:hover {
+
+            background: rgba(0,0,0,0.05);
+
+            color: var(--cafe);
+
+        }
+
+
+        .boton-ver-contrasena svg {
+
+            width: 18px;
+            height: 18px;
 
         }
 
@@ -1216,7 +1307,7 @@ import { AuthService } from '../../services/auth.service';
             box-sizing: border-box;
 
             padding:
-                    0 14px 0 43px;
+                    0 40px 0 43px;
 
             border:
                     1px solid var(--borde);
@@ -1234,6 +1325,11 @@ import { AuthService } from '../../services/auth.service';
                     box-shadow 0.2s ease,
                     transform 0.2s ease;
 
+        }
+
+
+        #username {
+            padding-right: 14px;
         }
 
 
@@ -1550,7 +1646,10 @@ import { AuthService } from '../../services/auth.service';
 
         .seguridad-icon {
 
-            font-size: 12px;
+            width: 14px;
+            height: 14px;
+
+            flex-shrink: 0;
 
         }
 
@@ -1571,7 +1670,13 @@ import { AuthService } from '../../services/auth.service';
 
             z-index: 3;
 
-            text-align: center;
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 6px;
 
             color:
                     rgba(255,255,255,0.55);
@@ -1581,9 +1686,12 @@ import { AuthService } from '../../services/auth.service';
         }
 
 
-        footer span:first-child {
+        .footer-icono {
 
-            margin-right: 4px;
+            width: 12px;
+            height: 12px;
+
+            flex-shrink: 0;
 
         }
 
@@ -1598,8 +1706,7 @@ import { AuthService } from '../../services/auth.service';
 
 
         /* =========================================================
-           ESCRITORIO GRANDE (afina el respiro en pantallas anchas,
-           sin dejar el contenido "flotando" con demasiado vacío)
+           ESCRITORIO GRANDE
         ========================================================= */
 
         @media (min-width: 1400px) {
@@ -1809,7 +1916,13 @@ import { AuthService } from '../../services/auth.service';
                 width: 55px;
                 height: 55px;
 
-                font-size: 24px;
+            }
+
+
+            .icono-login svg {
+
+                width: 24px;
+                height: 24px;
 
             }
 
@@ -1825,10 +1938,6 @@ import { AuthService } from '../../services/auth.service';
 
                 height: 50px;
 
-                /* 16px mínimo: por debajo de eso, Safari en iPhone hace
-                   zoom automático al tocar el campo -- muy molesto y
-                   fácil de pasar por alto si solo pruebas en Android
-                   o en el navegador de escritorio. */
                 font-size: 16px;
 
             }
@@ -1841,8 +1950,6 @@ import { AuthService } from '../../services/auth.service';
             }
 
 
-            /* En pantallas chicas, las hojas/granos flotantes le restan
-               espacio útil y se ven recargados -- se ocultan aquí. */
             .hoja,
             .grano {
 
@@ -1938,11 +2045,7 @@ import { AuthService } from '../../services/auth.service';
 
 
         /* =========================================================
-           CELULAR EN HORIZONTAL (poca altura): la tarjeta de
-           presentación ocupaba tanto alto que el formulario terminaba
-           empujado fuera de pantalla. Se oculta la presentación y se
-           prioriza el formulario, que es lo que la persona necesita
-           usar en ese momento.
+           CELULAR EN HORIZONTAL
         ========================================================= */
 
         @media (max-height: 480px) and (orientation: landscape) {
@@ -1993,9 +2096,15 @@ import { AuthService } from '../../services/auth.service';
                 width: 44px;
                 height: 44px;
 
-                font-size: 20px;
-
                 margin-bottom: 10px;
+
+            }
+
+
+            .icono-login svg {
+
+                width: 20px;
+                height: 20px;
 
             }
 
@@ -2014,6 +2123,7 @@ export class LoginComponent {
 
     username = '';
     password = '';
+    verContrasena = false;
 
     cargando = false;
     error = '';

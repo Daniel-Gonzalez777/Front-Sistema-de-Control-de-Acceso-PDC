@@ -62,7 +62,7 @@ import { AuthService } from './services/auth.service';
       display: flex;
       align-items: center;
       gap: 10px;
-      margin: -27px;
+      margin: -19px;
     }
     .usuario-nombre {
       font-size: 13px;

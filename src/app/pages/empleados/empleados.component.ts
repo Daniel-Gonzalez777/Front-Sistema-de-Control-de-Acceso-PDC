@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { EmpleadoService } from '../../services/empleado.service';
 import { ConcesionarioService } from '../../services/concesionario.service';
 import { ToastService } from '../../services/toast.service';
+import { AuthService } from '../../services/auth.service';
 import { Empleado } from '../../models/empleado.model';
 import { Concesionario } from '../../models/concesionario.model';
 
@@ -70,7 +71,10 @@ import { Concesionario } from '../../models/concesionario.model';
           <td>{{ e.nombre }}</td>
           <td>{{ e.cargo || '—' }}</td>
           <td>{{ e.area || '—' }}</td>
-          <td class="acciones"><button class="danger" (click)="eliminar(e)">Eliminar</button></td>
+          <td class="acciones">
+            <button *ngIf="esAdmin" class="danger" (click)="eliminar(e)">Eliminar</button>
+            <span *ngIf="!esAdmin">—</span>
+          </td>
         </tr>
         <tr *ngIf="!empleados.length"><td colspan="5">Este concesionario no tiene empleados registrados todavía.</td></tr>
         </tbody>
@@ -88,8 +92,15 @@ export class EmpleadosComponent implements OnInit {
   constructor(
       private empleadoService: EmpleadoService,
       private concesionarioService: ConcesionarioService,
-      private toastService: ToastService
+      private toastService: ToastService,
+      private authService: AuthService
   ) {}
+
+  // Solo Admin puede eliminar empleados. Concesionario y Portería (si
+  // alguna vez llegan a ver esta pantalla) no ven el botón.
+  get esAdmin(): boolean {
+    return this.authService.tieneRol('ADMIN');
+  }
 
   ngOnInit(): void {
     this.concesionarioService.listar().subscribe(data => this.concesionarios = data);

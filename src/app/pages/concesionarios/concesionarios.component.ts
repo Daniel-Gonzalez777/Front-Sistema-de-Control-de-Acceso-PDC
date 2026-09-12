@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ConcesionarioService } from '../../services/concesionario.service';
 import { Concesionario } from '../../models/concesionario.model';
 import { ToastService } from '../../services/toast.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-concesionarios',
@@ -39,19 +40,22 @@ import { ToastService } from '../../services/toast.service';
       <h2>Concesionarios registrados</h2>
       <table>
         <thead>
-          <tr><th>Nombre</th><th>NIT</th><th>Estado</th><th>Acciones</th></tr>
+        <tr><th>Nombre</th><th>NIT</th><th>Estado</th><th>Acciones</th></tr>
         </thead>
         <tbody>
-          <tr *ngFor="let c of concesionarios">
-            <td>{{ c.nombre }}</td>
-            <td>{{ c.nit }}</td>
-            <td><span class="badge" [class.ok]="c.activo" [class.no]="!c.activo">{{ c.activo ? 'Activo' : 'Inactivo' }}</span></td>
-            <td class="acciones">
+        <tr *ngFor="let c of concesionarios">
+          <td>{{ c.nombre }}</td>
+          <td>{{ c.nit }}</td>
+          <td><span class="badge" [class.ok]="c.activo" [class.no]="!c.activo">{{ c.activo ? 'Activo' : 'Inactivo' }}</span></td>
+          <td class="acciones">
+            <ng-container *ngIf="esAdmin">
               <button (click)="editar(c)">Editar</button>
               <button class="danger" (click)="eliminar(c)">Eliminar</button>
-            </td>
-          </tr>
-          <tr *ngIf="!concesionarios.length"><td colspan="4">No hay concesionarios registrados todavía.</td></tr>
+            </ng-container>
+            <span *ngIf="!esAdmin">—</span>
+          </td>
+        </tr>
+        <tr *ngIf="!concesionarios.length"><td colspan="4">No hay concesionarios registrados todavía.</td></tr>
         </tbody>
       </table>
     </div>
@@ -64,8 +68,15 @@ export class ConcesionariosComponent implements OnInit {
 
   constructor(
       private concesionarioService: ConcesionarioService,
-      private toastService: ToastService
+      private toastService: ToastService,
+      private authService: AuthService
   ) {}
+
+  // Solo Admin puede editar o eliminar concesionarios. Concesionario
+  // sigue pudiendo crear uno nuevo desde el formulario de arriba.
+  get esAdmin(): boolean {
+    return this.authService.tieneRol('ADMIN');
+  }
 
   ngOnInit(): void {
     this.cargar();
@@ -78,8 +89,8 @@ export class ConcesionariosComponent implements OnInit {
   guardar(): void {
     const esEdicion = !!this.editandoId;
     const accion = this.editandoId
-      ? this.concesionarioService.actualizar(this.editandoId, this.form)
-      : this.concesionarioService.crear(this.form);
+        ? this.concesionarioService.actualizar(this.editandoId, this.form)
+        : this.concesionarioService.crear(this.form);
 
     accion.subscribe({
       next: () => {

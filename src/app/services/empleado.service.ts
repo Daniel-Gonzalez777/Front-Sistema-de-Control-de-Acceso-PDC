@@ -24,6 +24,12 @@ export class EmpleadoService {
     return this.http.post<Empleado>(this.url, e);
   }
 
+  // Solo Admin puede llamar esto (el backend lo exige aparte, esto es
+  // solo para que el frontend pueda editar).
+  actualizar(id: number, e: Empleado): Observable<Empleado> {
+    return this.http.put<Empleado>(`${this.url}/${id}`, e);
+  }
+
   eliminar(id: number): Observable<void> {
     return this.http.delete<void>(`${this.url}/${id}`);
   }

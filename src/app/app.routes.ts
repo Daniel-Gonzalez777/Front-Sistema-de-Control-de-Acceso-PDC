@@ -22,7 +22,7 @@ export const routes: Routes = [
   { path: 'afiliaciones', component: AfiliacionesComponent, canActivate: [authGuard], data: { roles: ['ADMIN', 'CONCESIONARIO'] } },
   { path: 'empleados', component: EmpleadosComponent, canActivate: [authGuard], data: { roles: ['ADMIN', 'CONCESIONARIO'] } },
   { path: 'concesionarios', component: ConcesionariosComponent, canActivate: [authGuard], data: { roles: ['ADMIN', 'CONCESIONARIO'] } },
-  { path: 'calendario', component: CalendarioComponent, canActivate: [authGuard], data: { roles: ['ADMIN', 'CONCESIONARIO'] } },
+  { path: 'calendario', component: CalendarioComponent, canActivate: [authGuard], data: { roles: ['ADMIN'] } },
 
   // Compartida entre los 3 roles
   { path: 'historial', component: HistorialComponent, canActivate: [authGuard], data: { roles: ['ADMIN', 'PORTERIA', 'CONCESIONARIO'] } },

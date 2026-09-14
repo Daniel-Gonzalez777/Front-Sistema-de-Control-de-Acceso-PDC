@@ -14,9 +14,9 @@ import { Concesionario } from '../../models/concesionario.model';
   imports: [CommonModule, FormsModule],
   template: `
     <div class="card">
-      <h2>Nuevo empleado</h2>
-      <p class="ayuda">Normalmente los empleados se crean solos al cargar la plantilla Excel mensual (ver la sección Afiliaciones). Usa esto solo para casos puntuales.</p>
-      <form class="inline-form" (ngSubmit)="crear()" #f="ngForm">
+      <h2>{{ editandoId ? 'Editar empleado' : 'Nuevo empleado' }}</h2>
+      <p class="ayuda" *ngIf="!editandoId">Normalmente los empleados se crean solos al cargar la plantilla Excel mensual (ver la sección Afiliaciones). Usa esto solo para casos puntuales.</p>
+      <form class="inline-form" (ngSubmit)="guardar()" #f="ngForm">
         <div>
           <label>Cédula</label>
           <input type="text" name="cedula" [(ngModel)]="form.cedula" required>
@@ -40,8 +40,16 @@ import { Concesionario } from '../../models/concesionario.model';
             <option *ngFor="let c of concesionarios" [ngValue]="c.id">{{ c.nombre }}</option>
           </select>
         </div>
+        <div *ngIf="editandoId">
+          <label>Estado</label>
+          <select name="activo" [(ngModel)]="form.activo">
+            <option [ngValue]="true">Activo</option>
+            <option [ngValue]="false">Inactivo</option>
+          </select>
+        </div>
         <div>
-          <button type="submit" [disabled]="!f.valid || !concesionarioId">Crear</button>
+          <button type="submit" [disabled]="!f.valid || !concesionarioId">{{ editandoId ? 'Guardar cambios' : 'Crear' }}</button>
+          <button type="button" class="secondary" *ngIf="editandoId" (click)="cancelarEdicion()">Cancelar</button>
         </div>
       </form>
     </div>
@@ -63,7 +71,7 @@ import { Concesionario } from '../../models/concesionario.model';
 
       <table *ngIf="filtroConcesionarioId">
         <thead>
-        <tr><th>Cédula</th><th>Nombre</th><th>Cargo</th><th>Área</th><th>Acciones</th></tr>
+        <tr><th>Cédula</th><th>Nombre</th><th>Cargo</th><th>Área</th><th>Estado</th><th>Acciones</th></tr>
         </thead>
         <tbody>
         <tr *ngFor="let e of empleados">
@@ -71,12 +79,19 @@ import { Concesionario } from '../../models/concesionario.model';
           <td>{{ e.nombre }}</td>
           <td>{{ e.cargo || '—' }}</td>
           <td>{{ e.area || '—' }}</td>
+          <td>
+            <span class="badge" [class.ok]="e.activo !== false" [class.no]="e.activo === false">
+              {{ e.activo === false ? 'Inactivo' : 'Activo' }}
+            </span>
+          </td>
           <td class="acciones">
-            <button *ngIf="esAdmin" class="danger" (click)="eliminar(e)">Eliminar</button>
+            <ng-container *ngIf="esAdmin">
+              <button (click)="editar(e)">Editar</button>
+            </ng-container>
             <span *ngIf="!esAdmin">—</span>
           </td>
         </tr>
-        <tr *ngIf="!empleados.length"><td colspan="5">Este concesionario no tiene empleados registrados todavía.</td></tr>
+        <tr *ngIf="!empleados.length"><td colspan="6">Este concesionario no tiene empleados registrados todavía.</td></tr>
         </tbody>
       </table>
     </div>
@@ -87,7 +102,11 @@ export class EmpleadosComponent implements OnInit {
   concesionarios: Concesionario[] = [];
   concesionarioId: number | null = null;
   filtroConcesionarioId: number | null = null;
-  form = { cedula: '', nombre: '', cargo: '', area: '' };
+  editandoId: number | null = null;
+
+  form: { cedula: string; nombre: string; cargo: string; area: string; activo: boolean } = {
+    cedula: '', nombre: '', cargo: '', area: '', activo: true
+  };
 
   constructor(
       private empleadoService: EmpleadoService,
@@ -96,8 +115,8 @@ export class EmpleadosComponent implements OnInit {
       private authService: AuthService
   ) {}
 
-  // Solo Admin puede eliminar empleados. Concesionario y Portería (si
-  // alguna vez llegan a ver esta pantalla) no ven el botón.
+  // Solo Admin puede editar o eliminar empleados. Concesionario sigue
+  // pudiendo crear uno nuevo desde el formulario de arriba.
   get esAdmin(): boolean {
     return this.authService.tieneRol('ADMIN');
   }
@@ -119,26 +138,52 @@ export class EmpleadosComponent implements OnInit {
         .subscribe(data => this.empleados = data);
   }
 
-  crear(): void {
+  guardar(): void {
     if (!this.concesionarioId) return;
 
-    const nuevo: Empleado = {
+    const datos: Empleado = {
       cedula: this.form.cedula,
       nombre: this.form.nombre,
       cargo: this.form.cargo || null,
       area: this.form.area || null,
-      concesionario: { id: this.concesionarioId }
+      concesionario: { id: this.concesionarioId },
+      activo: this.form.activo
     };
 
-    this.empleadoService.crear(nuevo).subscribe({
+    const esEdicion = !!this.editandoId;
+    const accion = this.editandoId
+        ? this.empleadoService.actualizar(this.editandoId, datos)
+        : this.empleadoService.crear(datos);
+
+    accion.subscribe({
       next: () => {
-        this.form = { cedula: '', nombre: '', cargo: '', area: '' };
-        this.concesionarioId = null;
-        this.toastService.exito('Empleado creado.');
+        this.toastService.exito(esEdicion ? 'Empleado actualizado.' : 'Empleado creado.');
+        this.cancelarEdicion();
         this.cargar();
       },
-      error: (err) => this.toastService.error('No se pudo crear (¿cédula duplicada?): ' + (err.error?.message || err.message))
+      error: (err) => this.toastService.error(
+          (esEdicion ? 'No se pudo actualizar: ' : 'No se pudo crear (¿cédula duplicada?): ')
+          + (err.error?.message || err.message)
+      )
     });
+  }
+
+  editar(e: Empleado): void {
+    this.editandoId = e.id ?? null;
+    this.concesionarioId = e.concesionario?.id ?? null;
+    this.form = {
+      cedula: e.cedula,
+      nombre: e.nombre,
+      cargo: e.cargo || '',
+      area: e.area || '',
+      activo: e.activo !== false
+    };
+  }
+
+  cancelarEdicion(): void {
+    this.editandoId = null;
+    this.concesionarioId = null;
+    this.form = { cedula: '', nombre: '', cargo: '', area: '', activo: true };
   }
 
   eliminar(e: Empleado): void {

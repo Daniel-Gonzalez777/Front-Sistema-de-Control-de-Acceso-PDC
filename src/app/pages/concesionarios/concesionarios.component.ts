@@ -50,7 +50,6 @@ import { AuthService } from '../../services/auth.service';
           <td class="acciones">
             <ng-container *ngIf="esAdmin">
               <button (click)="editar(c)">Editar</button>
-              <button class="danger" (click)="eliminar(c)">Eliminar</button>
             </ng-container>
             <span *ngIf="!esAdmin">—</span>
           </td>

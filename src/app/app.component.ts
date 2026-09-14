@@ -26,7 +26,7 @@ import { AuthService } from './services/auth.service';
         <a *ngIf="tieneRol('ADMIN','CONCESIONARIO')" routerLink="/concesionarios" routerLinkActive="active">Concesionarios</a>
         <a routerLink="/historial" routerLinkActive="active">Historial</a>
         <a *ngIf="tieneRol('ADMIN','PORTERIA')" routerLink="/historial-visitas" routerLinkActive="active">Historial visitas</a>
-        <a *ngIf="tieneRol('ADMIN','CONCESIONARIO')" routerLink="/calendario" routerLinkActive="active">Calendario</a>
+        <a *ngIf="tieneRol('ADMIN')" routerLink="/calendario" routerLinkActive="active">Calendario</a>
       </nav>
 
       <div class="topbar-usuario">

@@ -7,4 +7,5 @@ export interface Empleado {
   cargo?: string | null;
   area?: string | null;
   concesionario: { id: number } | Concesionario;
+  activo?: boolean;
 }

@@ -55,7 +55,7 @@ import { EmpleadoDirectoParque } from '../../models/empleado-directo.model';
             </div>
 
             <div *ngIf="!huboBusquedaEmpleado" class="ayuda">
-                Selecciona un empleado arriba para ver las visitas que ha recibido.
+                Selecciona un empleado para ver las visitas que ha recibido.
             </div>
 
             <table *ngIf="huboBusquedaEmpleado">
@@ -95,7 +95,7 @@ import { EmpleadoDirectoParque } from '../../models/empleado-directo.model';
             </div>
 
             <div *ngIf="!visitanteSeleccionadoId" class="ayuda">
-                Selecciona un visitante arriba para ver todas las visitas que ha hecho al Parque.
+                Selecciona un visitante para ver todas las visitas que ha hecho al Parque.
             </div>
 
             <table *ngIf="visitanteSeleccionadoId">

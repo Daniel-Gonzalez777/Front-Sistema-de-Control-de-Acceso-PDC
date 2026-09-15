@@ -28,7 +28,6 @@ import { RegistroIngresoEmpleado } from '../../models/registro-ingreso.model';
 
     <div class="card">
       <h2>Historial completo de movimientos</h2>
-      <p class="ayuda">Se conservan automáticamente los últimos 14 días (los registros más viejos se eliminan solos, excepto el último movimiento de cada empleado).</p>
       <div class="tabla-scroll">
         <table>
           <thead><tr><th>Cédula</th><th>Empleado</th><th>Empresa</th><th>Movimiento</th><th>Resultado</th><th>Motivo</th><th>Fecha y hora</th></tr></thead>

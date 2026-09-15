@@ -19,7 +19,7 @@ import { ToastService } from '../../services/toast.service';
     <div class="card">
       <h2>Cargar plantilla mensual (Excel)</h2>
       <p class="ayuda">
-        El concesionario sube su archivo <code>.xlsx</code> del mes. El sistema crea o
+        Subir el archivo <code>.xlsx</code> del mes. El sistema crea o
         actualiza automáticamente sus empleados y la afiliación de Salud, Pensión y ARL
         del mes actual.
       </p>

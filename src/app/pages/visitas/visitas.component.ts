@@ -118,7 +118,6 @@ import { Empleado } from '../../models/empleado.model';
 
     <div class="card">
       <h2>Histórico de visitas</h2>
-      <p class="ayuda">Se conservan automáticamente los últimos 14 días (las visitas ya cerradas y más antiguas se eliminan solas; las que siguen dentro nunca se borran).</p>
       <div class="tabla-scroll">
         <table>
           <thead>
@@ -137,10 +136,6 @@ import { Empleado } from '../../models/empleado.model';
           </tbody>
         </table>
       </div>
-      <p class="ayuda">
-        ¿Buscas el historial de un empleado o de un visitante en particular?
-        Ve a la sección <strong>Historial de visitas</strong> en el menú.
-      </p>
     </div>
   `,
   styles: [`

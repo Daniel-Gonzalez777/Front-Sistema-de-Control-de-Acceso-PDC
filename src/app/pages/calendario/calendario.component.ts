@@ -30,8 +30,7 @@ interface CeldaCalendario {
     <div class="card">
       <h2>Calendario de accesos por empresa</h2>
       <p class="ayuda">
-        Selecciona la empresa (concesionario) y el mes. La información nunca se
-        mezcla entre empresas distintas.
+        Selecciona la empresa (concesionario) y el mes. 
       </p>
 
       <div class="controles">

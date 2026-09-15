@@ -15,7 +15,6 @@ import { Concesionario } from '../../models/concesionario.model';
   template: `
     <div class="card">
       <h2>{{ editandoId ? 'Editar empleado' : 'Nuevo empleado' }}</h2>
-      <p class="ayuda" *ngIf="!editandoId">Normalmente los empleados se crean solos al cargar la plantilla Excel mensual (ver la sección Afiliaciones). Usa esto solo para casos puntuales.</p>
       <form class="inline-form" (ngSubmit)="guardar()" #f="ngForm">
         <div>
           <label>Cédula</label>
@@ -66,7 +65,7 @@ import { Concesionario } from '../../models/concesionario.model';
       </div>
 
       <div *ngIf="!filtroConcesionarioId" class="ayuda">
-        Selecciona un concesionario arriba para ver su lista de empleados.
+        Selecciona un concesionario para ver su lista de empleados.
       </div>
 
       <table *ngIf="filtroConcesionarioId">

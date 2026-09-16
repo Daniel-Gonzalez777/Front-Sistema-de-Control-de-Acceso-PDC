@@ -76,10 +76,17 @@ import { ToastService } from '../../services/toast.service';
       <h2>Cargar afiliación manual (caso puntual)</h2>
       <form class="inline-form" (ngSubmit)="crear()" #f="ngForm">
         <div>
+          <label>Concesionario</label>
+          <select name="concesionarioIdManual" [(ngModel)]="concesionarioIdManual" (ngModelChange)="onConcesionarioManualChange()">
+            <option [ngValue]="null">Todas las empresas</option>
+            <option *ngFor="let c of concesionarios" [ngValue]="c.id">{{ c.nombre }}</option>
+          </select>
+        </div>
+        <div>
           <label>Empleado</label>
           <select name="empleadoId" [(ngModel)]="empleadoId" required>
             <option [ngValue]="null" disabled>Seleccione...</option>
-            <option *ngFor="let e of empleados" [ngValue]="e.id">{{ e.nombre }} ({{ e.cedula }})</option>
+            <option *ngFor="let e of empleadosFiltrados" [ngValue]="e.id">{{ e.nombre }} ({{ e.cedula }})</option>
           </select>
         </div>
         <div><label>Año</label><input type="number" name="anio" [(ngModel)]="anio" required></div>
@@ -119,29 +126,32 @@ import { ToastService } from '../../services/toast.service';
     <!-- LISTADO -->
     <div class="card">
       <h2>Afiliaciones cargadas</h2>
-      <table>
-        <thead>
-        <tr>
-          <th>Empleado</th><th>Año</th><th>Mes</th>
-          <th>Salud</th><th>EPS</th><th>Pensión</th><th>AFP</th><th>ARL</th><th>Nombre ARL</th><th>Cargado</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let a of afiliaciones">
-          <td>{{ nombreEmpleado(a) }}</td>
-          <td>{{ a.anio }}</td>
-          <td>{{ a.mes }}</td>
-          <td><span class="badge" [class.ok]="a.afiliadoSalud" [class.no]="!a.afiliadoSalud">{{ a.afiliadoSalud ? 'Sí' : 'No' }}</span></td>
-          <td>{{ a.eps || '—' }}</td>
-          <td><span class="badge" [class.ok]="a.afiliadoPension" [class.no]="!a.afiliadoPension">{{ a.afiliadoPension ? 'Sí' : 'No' }}</span></td>
-          <td>{{ a.afp || '—' }}</td>
-          <td><span class="badge" [class.ok]="a.afiliadoARL" [class.no]="!a.afiliadoARL">{{ a.afiliadoARL ? 'Sí' : 'No' }}</span></td>
-          <td>{{ a.arl || '—' }}</td>
-          <td>{{ a.fechaCarga | date:'short' }}</td>
-        </tr>
-        <tr *ngIf="!afiliaciones.length"><td colspan="10">No hay afiliaciones cargadas todavía.</td></tr>
-        </tbody>
-      </table>
+      <p class="ayuda">Se conservan automáticamente el mes actual y el mes anterior; lo más antiguo se elimina solo.</p>
+      <div class="tabla-scroll">
+        <table>
+          <thead>
+          <tr>
+            <th>Empleado</th><th>Año</th><th>Mes</th>
+            <th>Salud</th><th>EPS</th><th>Pensión</th><th>AFP</th><th>ARL</th><th>Nombre ARL</th><th>Cargado</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let a of afiliaciones">
+            <td>{{ nombreEmpleado(a) }}</td>
+            <td>{{ a.anio }}</td>
+            <td>{{ a.mes }}</td>
+            <td><span class="badge" [class.ok]="a.afiliadoSalud" [class.no]="!a.afiliadoSalud">{{ a.afiliadoSalud ? 'Sí' : 'No' }}</span></td>
+            <td>{{ a.eps || '—' }}</td>
+            <td><span class="badge" [class.ok]="a.afiliadoPension" [class.no]="!a.afiliadoPension">{{ a.afiliadoPension ? 'Sí' : 'No' }}</span></td>
+            <td>{{ a.afp || '—' }}</td>
+            <td><span class="badge" [class.ok]="a.afiliadoARL" [class.no]="!a.afiliadoARL">{{ a.afiliadoARL ? 'Sí' : 'No' }}</span></td>
+            <td>{{ a.arl || '—' }}</td>
+            <td>{{ a.fechaCarga | date:'short' }}</td>
+          </tr>
+          <tr *ngIf="!afiliaciones.length"><td colspan="10">No hay afiliaciones cargadas todavía.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   `,
   styles: [`
@@ -167,6 +177,19 @@ import { ToastService } from '../../services/toast.service';
       background: #D3131C;
       color: white;
     }
+
+    .tabla-scroll {
+      max-height: 480px;
+      overflow-y: auto;
+      border: 1px solid var(--pdc-borde, #e6dac8);
+      border-radius: 8px;
+    }
+    .tabla-scroll table { margin: 0; }
+    .tabla-scroll thead th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
   `]
 })
 export class AfiliacionesComponent implements OnInit {
@@ -180,6 +203,7 @@ export class AfiliacionesComponent implements OnInit {
   resultadoCarga: ResultadoCarga | null = null;
   errorCarga = '';
 
+  concesionarioIdManual: number | null = null;
   empleadoId: number | null = null;
   anio = new Date().getFullYear();
   mes = new Date().getMonth() + 1;
@@ -205,6 +229,22 @@ export class AfiliacionesComponent implements OnInit {
     this.cargar();
     this.empleadoService.listar().subscribe(data => this.empleados = data);
     this.concesionarioService.listar().subscribe(data => this.concesionarios = data);
+  }
+
+  // Solo los empleados de la empresa elegida en el formulario manual
+  // (o todos, si no se ha elegido ninguna) -- para no tener que buscar
+  // entre todos los empleados de todos los concesionarios mezclados.
+  get empleadosFiltrados(): Empleado[] {
+    if (!this.concesionarioIdManual) return this.empleados;
+    return this.empleados.filter(e => (e.concesionario as any)?.id === this.concesionarioIdManual);
+  }
+
+  onConcesionarioManualChange(): void {
+    // Si el empleado que ya tenías elegido no pertenece a la empresa
+    // filtrada, se limpia para no dejar una selección inconsistente.
+    if (this.empleadoId && !this.empleadosFiltrados.some(e => e.id === this.empleadoId)) {
+      this.empleadoId = null;
+    }
   }
 
   cargar(): void {
@@ -265,6 +305,7 @@ export class AfiliacionesComponent implements OnInit {
     this.afiliacionService.crear(nueva).subscribe({
       next: () => {
         this.empleadoId = null;
+        this.concesionarioIdManual = null;
         this.eps = ''; this.fechaAfiliacionSalud = '';
         this.afp = ''; this.fechaAfiliacionPension = '';
         this.arl = ''; this.fechaAfiliacionARL = '';

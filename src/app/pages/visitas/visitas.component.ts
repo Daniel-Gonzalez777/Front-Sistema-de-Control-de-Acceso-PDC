@@ -4,9 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { VisitaService } from '../../services/visita.service';
 import { EmpleadoService } from '../../services/empleado.service';
 import { EmpleadoDirectoService } from '../../services/empleado-directo.service';
+import { ConcesionarioService } from '../../services/concesionario.service';
 import { ToastService } from '../../services/toast.service';
 import { RegistroVisita, RegistroVisitaRequest } from '../../models/visita.model';
 import { Empleado } from '../../models/empleado.model';
+import { Concesionario } from '../../models/concesionario.model';
 
 @Component({
   selector: 'app-visitas',
@@ -39,13 +41,22 @@ import { Empleado } from '../../models/empleado.model';
         </div>
 
         <!-- Caso: empleado del sistema -->
-        <div *ngIf="tipoEmpleado === 'sistema'">
-          <label>Empleado a visitar</label>
-          <select name="empleadoVisitadoId" [(ngModel)]="req.empleadoVisitadoId" [required]="tipoEmpleado === 'sistema'">
-            <option [ngValue]="null" disabled>Seleccione...</option>
-            <option *ngFor="let e of empleados" [ngValue]="e.id">{{ e.nombre }} ({{ e.cedula }})</option>
-          </select>
-        </div>
+        <ng-container *ngIf="tipoEmpleado === 'sistema'">
+          <div>
+            <label>Concesionario</label>
+            <select name="concesionarioIdFiltro" [(ngModel)]="concesionarioIdFiltro" (ngModelChange)="onConcesionarioFiltroChange()">
+              <option [ngValue]="null">Todas las empresas</option>
+              <option *ngFor="let c of concesionarios" [ngValue]="c.id">{{ c.nombre }}</option>
+            </select>
+          </div>
+          <div>
+            <label>Empleado a visitar</label>
+            <select name="empleadoVisitadoId" [(ngModel)]="req.empleadoVisitadoId" [required]="tipoEmpleado === 'sistema'">
+              <option [ngValue]="null" disabled>Seleccione...</option>
+              <option *ngFor="let e of empleadosFiltrados" [ngValue]="e.id">{{ e.nombre }} ({{ e.cedula }})</option>
+            </select>
+          </div>
+        </ng-container>
 
         <!-- Caso: empleado directo del parque -->
         <ng-container *ngIf="tipoEmpleado === 'directo'">
@@ -157,9 +168,11 @@ export class VisitasComponent implements OnInit {
   activas: RegistroVisita[] = [];
   todas: RegistroVisita[] = [];
   empleados: Empleado[] = [];
+  concesionarios: Concesionario[] = [];
   areasDisponibles: string[] = [];
 
   tipoEmpleado: 'sistema' | 'directo' = 'sistema';
+  concesionarioIdFiltro: number | null = null;
 
   req: RegistroVisitaRequest = {
     nombreVisitante: '',
@@ -176,6 +189,7 @@ export class VisitasComponent implements OnInit {
       private visitaService: VisitaService,
       private empleadoService: EmpleadoService,
       private empleadoDirectoService: EmpleadoDirectoService,
+      private concesionarioService: ConcesionarioService,
       private toastService: ToastService
   ) {}
 
@@ -183,6 +197,21 @@ export class VisitasComponent implements OnInit {
     this.cargar();
     this.empleadoService.listar().subscribe(data => this.empleados = data);
     this.empleadoDirectoService.areas().subscribe(data => this.areasDisponibles = data);
+    this.concesionarioService.listar().subscribe(data => this.concesionarios = data);
+  }
+
+  // Solo los empleados de la empresa elegida en el filtro (o todos, si
+  // no se ha elegido ninguna) -- para no tener que buscar entre todos los
+  // empleados de todos los concesionarios mezclados.
+  get empleadosFiltrados(): Empleado[] {
+    if (!this.concesionarioIdFiltro) return this.empleados;
+    return this.empleados.filter(e => (e.concesionario as any)?.id === this.concesionarioIdFiltro);
+  }
+
+  onConcesionarioFiltroChange(): void {
+    if (this.req.empleadoVisitadoId && !this.empleadosFiltrados.some(e => e.id === this.req.empleadoVisitadoId)) {
+      this.req.empleadoVisitadoId = null;
+    }
   }
 
   onTipoEmpleadoChange(): void {
@@ -191,6 +220,7 @@ export class VisitasComponent implements OnInit {
     this.req.empleadoDirectoCedula = '';
     this.req.empleadoDirectoNombre = '';
     this.req.empleadoDirectoArea = undefined;
+    this.concesionarioIdFiltro = null;
   }
 
   nombreVisitado(v: RegistroVisita): string {
@@ -212,6 +242,7 @@ export class VisitasComponent implements OnInit {
           motivo: '', ingresaVehiculo: false, placaVehiculo: '', tipoVehiculo: '', zonaParqueo: ''
         };
         this.tipoEmpleado = 'sistema';
+        this.concesionarioIdFiltro = null;
         this.toastService.exito('Ingreso de visitante registrado.');
         this.cargar();
       },

@@ -13,19 +13,17 @@ import { authGuard } from './guards/auth.guard';
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
 
-  // Portería (y Admin)
-  { path: '', component: ValidarIngresoComponent, canActivate: [authGuard], data: { roles: ['ADMIN', 'PORTERIA'] } },
-  { path: 'visitas', component: VisitasComponent, canActivate: [authGuard], data: { roles: ['ADMIN', 'PORTERIA'] } },
-  { path: 'historial-visitas', component: HistorialVisitasComponent, canActivate: [authGuard], data: { roles: ['ADMIN', 'PORTERIA'] } },
+  // Públicas: las 4 pantallas de portería, sin necesidad de iniciar sesión.
+  { path: '', component: ValidarIngresoComponent },
+  { path: 'visitas', component: VisitasComponent },
+  { path: 'historial', component: HistorialComponent },
+  { path: 'historial-visitas', component: HistorialVisitasComponent },
 
-  // Concesionario (y Admin)
-  { path: 'afiliaciones', component: AfiliacionesComponent, canActivate: [authGuard], data: { roles: ['ADMIN', 'CONCESIONARIO'] } },
-  { path: 'empleados', component: EmpleadosComponent, canActivate: [authGuard], data: { roles: ['ADMIN', 'CONCESIONARIO'] } },
-  { path: 'concesionarios', component: ConcesionariosComponent, canActivate: [authGuard], data: { roles: ['ADMIN', 'CONCESIONARIO'] } },
+  // Exclusivas de Admin.
+  { path: 'afiliaciones', component: AfiliacionesComponent, canActivate: [authGuard], data: { roles: ['ADMIN'] } },
+  { path: 'empleados', component: EmpleadosComponent, canActivate: [authGuard], data: { roles: ['ADMIN'] } },
+  { path: 'concesionarios', component: ConcesionariosComponent, canActivate: [authGuard], data: { roles: ['ADMIN'] } },
   { path: 'calendario', component: CalendarioComponent, canActivate: [authGuard], data: { roles: ['ADMIN'] } },
-
-  // Compartida entre los 3 roles
-  { path: 'historial', component: HistorialComponent, canActivate: [authGuard], data: { roles: ['ADMIN', 'PORTERIA', 'CONCESIONARIO'] } },
 
   { path: '**', redirectTo: '' }
 ];

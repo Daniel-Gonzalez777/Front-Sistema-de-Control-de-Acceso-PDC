@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, RouterLink],
 
     template: `
         <div class="login-page">
@@ -46,14 +46,14 @@ import { AuthService } from '../../services/auth.service';
             ====================================================== -->
 
             <div class="contenido">
-
+                
 
                 <!-- =================================================
                      INFORMACIÓN DEL PARQUE
                 ================================================== -->
 
                 <section class="presentacion">
-
+                    <a routerLink="/" class="reversa">↩</a>
                     <div class="logo-contenedor">
 
                         <img
@@ -1024,6 +1024,18 @@ import { AuthService } from '../../services/auth.service';
         /* =========================================================
            TARJETA LOGIN
         ========================================================= */
+
+        .reversa {
+            color: #7b1e1e;
+            text-decoration: none;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .reversa:hover {
+            color: #a52a2a;
+        }
 
         .login-card {
 

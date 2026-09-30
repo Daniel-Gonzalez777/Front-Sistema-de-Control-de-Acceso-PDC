@@ -35,7 +35,7 @@ body {
 .topbar {
   background: var(--pdc-cafe-rojo);
   color: var(--pdc-crema);
-  padding: 10px 24px;
+  padding: 10px 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -58,7 +58,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   /* gap: 0px; */
-  transform: translate(-9px);
+  transform: translate(0px);
 }
 
 .topbar nav a {

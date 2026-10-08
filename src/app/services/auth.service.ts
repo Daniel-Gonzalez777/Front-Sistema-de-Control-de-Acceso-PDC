@@ -23,7 +23,7 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem(this.CLAVE_STORAGE);
+    sessionStorage.removeItem(this.CLAVE_STORAGE);
   }
 
   estaAutenticado(): boolean {
@@ -31,7 +31,10 @@ export class AuthService {
   }
 
   obtenerSesion(): SesionUsuario | null {
-    const raw = localStorage.getItem(this.CLAVE_STORAGE);
+    // sessionStorage (no localStorage) a propósito: el navegador la borra
+    // solo al cerrar la pestaña/ventana, así la sesión no queda guardada
+    // para siempre.
+    const raw = sessionStorage.getItem(this.CLAVE_STORAGE);
     return raw ? JSON.parse(raw) : null;
   }
 
@@ -61,6 +64,6 @@ export class AuthService {
   }
 
   private guardarSesion(sesion: SesionUsuario): void {
-    localStorage.setItem(this.CLAVE_STORAGE, JSON.stringify(sesion));
+    sessionStorage.setItem(this.CLAVE_STORAGE, JSON.stringify(sesion));
   }
 }

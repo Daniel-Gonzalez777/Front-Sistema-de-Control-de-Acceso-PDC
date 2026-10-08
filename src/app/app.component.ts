@@ -124,6 +124,18 @@ export class AppComponent {
         this.enPantallaLogin = event.urlAfterRedirects === '/login';
       }
     });
+
+    // Botones atrás/adelante del navegador: algunos navegadores restauran la
+    // página desde una "foto" guardada en memoria (bfcache) sin volver a
+    // cargarla, y esa foto puede mostrar pantallas de Admin sin que se
+    // vuelva a verificar la sesión. Cuando eso pasa (event.persisted), se
+    // fuerza una recarga real: Angular arranca de cero y el guard de
+    // autenticación vuelve a decidir si se puede entrar o se manda al login.
+    window.addEventListener('pageshow', (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        window.location.reload();
+      }
+    });
   }
 
   cerrarSesion(): void {

@@ -15,7 +15,7 @@ import { ToastService } from '../../services/toast.service';
       <h2>Validar cédula</h2>
 
       <p class="ayuda">
-        Digite o escanee la cédula.
+        Escanee el código de barras o digite el número de cédula.
       </p>
 
       <input
@@ -28,12 +28,49 @@ import { ToastService } from '../../services/toast.service';
           class="input-cedula"
           autocomplete="off">
 
+      <!-- Teclado numérico -->
+      <div class="teclado-numerico">
+        <button
+            *ngFor="let numero of numeros"
+            type="button"
+            class="tecla"
+            [disabled]="buscando"
+            (click)="agregarNumero(numero)">
+          {{ numero }}
+        </button>
+
+        <button
+            type="button"
+            class="tecla tecla-borrar"
+            [disabled]="buscando"
+            (click)="borrarTodo()">
+          Borrar
+        </button>
+
+        <button
+            type="button"
+            class="tecla"
+            [disabled]="buscando"
+            (click)="agregarNumero('0')">
+          0
+        </button>
+
+        <button
+            type="button"
+            class="tecla tecla-borrar"
+            aria-label="Borrar último dígito"
+            [disabled]="buscando"
+            (click)="borrarUltimo()">
+          ⌫
+        </button>
+      </div>
+
       <button
           type="button"
           (click)="validar()"
           [disabled]="buscando"
           class="btn-validar">
-        {{ buscando ? 'Consultando...' : 'Validar' }}
+        {{ buscando ? 'Consultando...' : 'Validar ingreso' }}
       </button>
 
       <p *ngIf="buscando" class="ayuda">
@@ -52,7 +89,8 @@ import { ToastService } from '../../services/toast.service';
         </p>
 
         <p *ngIf="resultado.concesionario">
-          <strong>Concesionario:</strong> {{ resultado.concesionario }}
+          <strong>Concesionario:</strong>
+          {{ resultado.concesionario }}
         </p>
 
         <p>
@@ -74,14 +112,63 @@ import { ToastService } from '../../services/toast.service';
       text-align: center;
       width: 100%;
       box-sizing: border-box;
+      margin-bottom: 16px;
+    }
+
+    .teclado-numerico {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      max-width: 330px;
+      margin: 0 auto;
+    }
+
+    .tecla {
+      min-height: 58px;
+      border: 1px solid #d0d0d0;
+      border-radius: 10px;
+      background: #f5f5f5;
+      color: #222;
+      font-size: 24px;
+      font-weight: 600;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .tecla:hover:not(:disabled) {
+      background: #e5e5e5;
+    }
+
+    .tecla:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+
+    .tecla-borrar {
+      font-size: 16px;
     }
 
     .btn-validar {
-      margin-top: 12px;
+      margin-top: 16px;
       font-size: 18px;
-      padding: 12px 24px;
+      padding: 14px 24px;
       width: 100%;
       cursor: pointer;
+    }
+
+    .tecla:disabled,
+    .btn-validar:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 400px) {
+      .card-central {
+        margin: 20px 10px;
+      }
+
+      .tecla {
+        min-height: 52px;
+      }
     }
   `]
 })
@@ -90,6 +177,12 @@ export class ValidarIngresoComponent implements AfterViewInit {
   cedula = '';
   resultado: ResultadoValidacion | null = null;
   buscando = false;
+
+  numeros = [
+    '1', '2', '3',
+    '4', '5', '6',
+    '7', '8', '9'
+  ];
 
   @ViewChild('inputCedula')
   inputCedula!: ElementRef<HTMLInputElement>;
@@ -104,27 +197,52 @@ export class ValidarIngresoComponent implements AfterViewInit {
   }
 
   /**
-   * Extrae la cédula del texto completo del código de barras.
-   * Toma las posiciones 9 a 18 y elimina los ceros iniciales.
+   * Extrae los caracteres de las posiciones 9 a 18
+   * cuando se recibe el texto completo del código de barras.
+   *
+   * Si se digita manualmente, conserva solamente los números.
+   * En ambos casos elimina los ceros iniciales.
    */
   private extraerCedula(texto: string): string {
-    let textoLimpio = texto.trim();
+    const textoLimpio = texto.trim().replace(/^[="'“”]+/, '');
 
-    // Elimina posibles signos de apertura si vienen en la lectura.
-    textoLimpio = textoLimpio.replace(/^[="'“”]+/, '');
-
-    // Si el lector entregó el texto completo de la cédula.
+    // Lectura completa del código de barras.
     if (textoLimpio.length >= 18) {
       const fragmento = textoLimpio.slice(8, 18);
 
-      // Elimina únicamente los ceros que estén al comienzo.
-      const numero = fragmento.replace(/^0+/, '');
-
-      return numero;
+      return fragmento
+          .replace(/\D/g, '')
+          .replace(/^0+/, '');
     }
 
-    // Permite digitar manualmente una cédula.
-    return textoLimpio.replace(/\D/g, '').replace(/^0+/, '');
+    // Cédula digitada manualmente o ingresada con el teclado.
+    return textoLimpio
+        .replace(/\D/g, '')
+        .replace(/^0+/, '');
+  }
+
+  agregarNumero(numero: string): void {
+    if (this.buscando) return;
+
+    this.cedula += numero;
+    this.resultado = null;
+    this.enfocarInput();
+  }
+
+  borrarUltimo(): void {
+    if (this.buscando) return;
+
+    this.cedula = this.cedula.slice(0, -1);
+    this.resultado = null;
+    this.enfocarInput();
+  }
+
+  borrarTodo(): void {
+    if (this.buscando) return;
+
+    this.cedula = '';
+    this.resultado = null;
+    this.enfocarInput();
   }
 
   validar(): void {
@@ -134,14 +252,14 @@ export class ValidarIngresoComponent implements AfterViewInit {
 
     if (!numeroCedula) {
       this.toastService.error(
-          'No se encontró un número de cédula válido.'
+          'Ingrese o escanee un número de cédula válido.'
       );
+
       this.cedula = '';
       this.enfocarInput();
       return;
     }
 
-    this.cedula = numeroCedula;
     this.buscando = true;
     this.resultado = null;
 
@@ -154,11 +272,10 @@ export class ValidarIngresoComponent implements AfterViewInit {
       },
       error: () => {
         this.toastService.error(
-            'No se pudo consultar el sistema. Verifica que el backend esté corriendo.'
+            'No se pudo consultar el sistema. Verifica que el backend esté disponible.'
         );
 
         this.buscando = false;
-        this.cedula = '';
         this.enfocarInput();
       }
     });
@@ -189,6 +306,8 @@ export class ValidarIngresoComponent implements AfterViewInit {
   }
 
   private enfocarInput(): void {
-    setTimeout(() => this.inputCedula?.nativeElement.focus(), 0);
+    setTimeout(() => {
+      this.inputCedula?.nativeElement.focus();
+    }, 0);
   }
 }

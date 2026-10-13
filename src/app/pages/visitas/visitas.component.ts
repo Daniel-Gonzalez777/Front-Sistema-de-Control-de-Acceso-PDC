@@ -92,10 +92,7 @@ import { Concesionario } from '../../models/concesionario.model';
           <label>Tipo de vehículo</label>
           <input type="text" name="tipoVehiculo" [(ngModel)]="req.tipoVehiculo">
         </div>
-        <div *ngIf="req.ingresaVehiculo">
-          <label>Zona de parqueo</label>
-          <input type="text" name="zonaParqueo" [(ngModel)]="req.zonaParqueo">
-        </div>
+       
 
         <div>
           <button type="submit" [disabled]="!f.valid">Registrar ingreso</button>
